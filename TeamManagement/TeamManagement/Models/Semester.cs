@@ -12,8 +12,9 @@ namespace TeamManagement.Models
             Courses = new HashSet<Course>();
         }
 
-        public string SemId { get; set; }
+        public int SemId { get; set; }
         public string SemName { get; set; }
+        public int? Status { get; set; }
 
         public virtual ICollection<Course> Courses { get; set; }
     }

@@ -9,14 +9,19 @@ namespace TeamManagement.Models
     {
         public Teacher()
         {
-            Courses = new HashSet<Course>();
+            TeacherCourses = new HashSet<TeacherCourse>();
+            TeacherTeams = new HashSet<TeacherTeam>();
+            TeacherTopics = new HashSet<TeacherTopic>();
         }
 
-        public string TeacherId { get; set; }
+        public int TeacherId { get; set; }
         public string TeacherName { get; set; }
         public string TeacherEmail { get; set; }
         public string TeacherPhone { get; set; }
+        public int? Status { get; set; }
 
-        public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<TeacherCourse> TeacherCourses { get; set; }
+        public virtual ICollection<TeacherTeam> TeacherTeams { get; set; }
+        public virtual ICollection<TeacherTopic> TeacherTopics { get; set; }
     }
 }

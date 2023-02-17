@@ -7,10 +7,11 @@ namespace TeamManagement.Models
 {
     public partial class Participant
     {
-        public string CourseId { get; set; }
-        public string StuId { get; set; }
-        public string TeamId { get; set; }
-        public string InCourse { get; set; }
+        public int ParticipantId { get; set; }
+        public int? TeamId { get; set; }
+        public int? StuId { get; set; }
+        public int? CourseId { get; set; }
+        public int? Status { get; set; }
 
         public virtual Course Course { get; set; }
         public virtual Student Stu { get; set; }

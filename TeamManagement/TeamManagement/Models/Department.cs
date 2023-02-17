@@ -12,8 +12,9 @@ namespace TeamManagement.Models
             Subjects = new HashSet<Subject>();
         }
 
-        public string DeptId { get; set; }
+        public int DeptId { get; set; }
         public string DeptName { get; set; }
+        public int? Status { get; set; }
 
         public virtual ICollection<Subject> Subjects { get; set; }
     }

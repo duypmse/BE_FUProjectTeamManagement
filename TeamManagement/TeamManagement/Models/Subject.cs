@@ -12,9 +12,10 @@ namespace TeamManagement.Models
             Courses = new HashSet<Course>();
         }
 
-        public string SubId { get; set; }
+        public int SubId { get; set; }
         public string SubName { get; set; }
-        public string DeptId { get; set; }
+        public int? DeptId { get; set; }
+        public int? Status { get; set; }
 
         public virtual Department Dept { get; set; }
         public virtual ICollection<Course> Courses { get; set; }

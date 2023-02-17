@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.Models;
+using TeamManagement.Repository;
 
 namespace TeamManagement
 {
@@ -28,9 +29,11 @@ namespace TeamManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
-            services.AddDbContext<FPTUProjectContext>(option =>
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<ITeacherRepository, TeacherRepository>();
+            services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddDbContext<FUProjectTeamManagementContext>(option =>
             {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDB"));
             });

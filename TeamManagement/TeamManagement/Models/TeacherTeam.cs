@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 namespace TeamManagement.Models
 {
-    public partial class TeamTeacher
+    public partial class TeacherTeam
     {
-        public string TeamId { get; set; }
-        public string TeacherId { get; set; }
+        public int TeacherId { get; set; }
+        public int TeamId { get; set; }
 
         public virtual Teacher Teacher { get; set; }
         public virtual Team Team { get; set; }
