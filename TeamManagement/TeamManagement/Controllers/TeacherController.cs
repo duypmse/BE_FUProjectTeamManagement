@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Models;
-using TeamManagement.Repository;
+using TeamManagement.Repositories.TeacherRepository;
 
 namespace TeamManagement.Controllers
 {
+    [Authorize(Roles ="admin, teacher")]
     [Route("api/[controller]")]
     [ApiController]
     public class TeacherController : ControllerBase
@@ -20,6 +22,7 @@ namespace TeamManagement.Controllers
             _teacherRepository = teacherRepository;
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllTeacher()
         {
             try

@@ -17,6 +17,7 @@ namespace TeamManagement.Models
         {
         }
 
+        public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<CourseTeam> CourseTeams { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
@@ -45,6 +46,19 @@ namespace TeamManagement.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<Admin>(entity =>
+            {
+                entity.ToTable("Admin");
+
+                entity.Property(e => e.AdminEmail)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AdminPassword)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Course>(entity =>
             {
                 entity.ToTable("Course");
@@ -62,18 +76,18 @@ namespace TeamManagement.Models
                 entity.HasOne(d => d.Sem)
                     .WithMany(p => p.Courses)
                     .HasForeignKey(d => d.SemId)
-                    .HasConstraintName("FK__Course__SemId__5AEE82B9");
+                    .HasConstraintName("FK__Course__SemId__5CD6CB2B");
 
                 entity.HasOne(d => d.Sub)
                     .WithMany(p => p.Courses)
                     .HasForeignKey(d => d.SubId)
-                    .HasConstraintName("FK__Course__SubId__59FA5E80");
+                    .HasConstraintName("FK__Course__SubId__5BE2A6F2");
             });
 
             modelBuilder.Entity<CourseTeam>(entity =>
             {
                 entity.HasKey(e => new { e.CourseId, e.TeamId })
-                    .HasName("PK__Course_T__480EDFDE2CF38614");
+                    .HasName("PK__Course_T__480EDFDE06F1245E");
 
                 entity.ToTable("Course_Team");
 
@@ -81,19 +95,19 @@ namespace TeamManagement.Models
                     .WithMany(p => p.CourseTeams)
                     .HasForeignKey(d => d.CourseId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Course_Te__Cours__6C190EBB");
+                    .HasConstraintName("FK__Course_Te__Cours__6E01572D");
 
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.CourseTeams)
                     .HasForeignKey(d => d.TeamId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Course_Te__TeamI__6D0D32F4");
+                    .HasConstraintName("FK__Course_Te__TeamI__6EF57B66");
             });
 
             modelBuilder.Entity<Department>(entity =>
             {
                 entity.HasKey(e => e.DeptId)
-                    .HasName("PK__Departme__014881AEACFA8C09");
+                    .HasName("PK__Departme__014881AE30D02E98");
 
                 entity.ToTable("Department");
 
@@ -126,7 +140,7 @@ namespace TeamManagement.Models
             modelBuilder.Entity<Semester>(entity =>
             {
                 entity.HasKey(e => e.SemId)
-                    .HasName("PK__Semester__16D6C7AADE6DA278");
+                    .HasName("PK__Semester__16D6C7AAD6B223FA");
 
                 entity.ToTable("Semester");
 
@@ -139,7 +153,7 @@ namespace TeamManagement.Models
             modelBuilder.Entity<Student>(entity =>
             {
                 entity.HasKey(e => e.StuId)
-                    .HasName("PK__Student__6CDFAB957983AFA6");
+                    .HasName("PK__Student__6CDFAB95E6A17846");
 
                 entity.ToTable("Student");
 
@@ -172,7 +186,7 @@ namespace TeamManagement.Models
             modelBuilder.Entity<Subject>(entity =>
             {
                 entity.HasKey(e => e.SubId)
-                    .HasName("PK__Subject__4D9BB84A6052D6E3");
+                    .HasName("PK__Subject__4D9BB84A19EF791F");
 
                 entity.ToTable("Subject");
 
@@ -183,7 +197,7 @@ namespace TeamManagement.Models
                 entity.HasOne(d => d.Dept)
                     .WithMany(p => p.Subjects)
                     .HasForeignKey(d => d.DeptId)
-                    .HasConstraintName("FK__Subject__DeptId__4BAC3F29");
+                    .HasConstraintName("FK__Subject__DeptId__4D94879B");
             });
 
             modelBuilder.Entity<Teacher>(entity =>
@@ -205,7 +219,7 @@ namespace TeamManagement.Models
             modelBuilder.Entity<TeacherCourse>(entity =>
             {
                 entity.HasKey(e => new { e.TeacherId, e.CourseId })
-                    .HasName("PK__Teacher___81608E7E1ECBFE13");
+                    .HasName("PK__Teacher___81608E7EBF9E275A");
 
                 entity.ToTable("Teacher_Course");
 
@@ -213,19 +227,19 @@ namespace TeamManagement.Models
                     .WithMany(p => p.TeacherCourses)
                     .HasForeignKey(d => d.CourseId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Teacher_C__Cours__693CA210");
+                    .HasConstraintName("FK__Teacher_C__Cours__6B24EA82");
 
                 entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.TeacherCourses)
                     .HasForeignKey(d => d.TeacherId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Teacher_C__Teach__68487DD7");
+                    .HasConstraintName("FK__Teacher_C__Teach__6A30C649");
             });
 
             modelBuilder.Entity<TeacherTeam>(entity =>
             {
                 entity.HasKey(e => new { e.TeacherId, e.TeamId })
-                    .HasName("PK__Teacher___6CD1F71D88544F78");
+                    .HasName("PK__Teacher___6CD1F71DCF07B8FA");
 
                 entity.ToTable("Teacher_Team");
 
@@ -233,19 +247,19 @@ namespace TeamManagement.Models
                     .WithMany(p => p.TeacherTeams)
                     .HasForeignKey(d => d.TeacherId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Teacher_T__Teach__5441852A");
+                    .HasConstraintName("FK__Teacher_T__Teach__5629CD9C");
 
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.TeacherTeams)
                     .HasForeignKey(d => d.TeamId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Teacher_T__TeamI__5535A963");
+                    .HasConstraintName("FK__Teacher_T__TeamI__571DF1D5");
             });
 
             modelBuilder.Entity<TeacherTopic>(entity =>
             {
                 entity.HasKey(e => new { e.TeacherId, e.TopicId })
-                    .HasName("PK__Teacher___2DD0B99148B5441F");
+                    .HasName("PK__Teacher___2DD0B991EBEDA2F7");
 
                 entity.ToTable("Teacher_Topic");
 
@@ -253,13 +267,13 @@ namespace TeamManagement.Models
                     .WithMany(p => p.TeacherTopics)
                     .HasForeignKey(d => d.TeacherId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Teacher_T__Teach__60A75C0F");
+                    .HasConstraintName("FK__Teacher_T__Teach__628FA481");
 
                 entity.HasOne(d => d.Topic)
                     .WithMany(p => p.TeacherTopics)
                     .HasForeignKey(d => d.TopicId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Teacher_T__Topic__619B8048");
+                    .HasConstraintName("FK__Teacher_T__Topic__6383C8BA");
             });
 
             modelBuilder.Entity<Team>(entity =>
@@ -274,7 +288,7 @@ namespace TeamManagement.Models
             modelBuilder.Entity<TeamTopic>(entity =>
             {
                 entity.HasKey(e => new { e.TeamId, e.TopicId })
-                    .HasName("PK__Team_Top__D218076C801C451C");
+                    .HasName("PK__Team_Top__D218076C35713ED3");
 
                 entity.ToTable("Team_Topic");
 
@@ -282,13 +296,13 @@ namespace TeamManagement.Models
                     .WithMany(p => p.TeamTopics)
                     .HasForeignKey(d => d.TeamId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Team_Topi__TeamI__6477ECF3");
+                    .HasConstraintName("FK__Team_Topi__TeamI__66603565");
 
                 entity.HasOne(d => d.Topic)
                     .WithMany(p => p.TeamTopics)
                     .HasForeignKey(d => d.TopicId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Team_Topi__Topic__656C112C");
+                    .HasConstraintName("FK__Team_Topi__Topic__6754599E");
             });
 
             modelBuilder.Entity<Topic>(entity =>
@@ -302,7 +316,7 @@ namespace TeamManagement.Models
                 entity.HasOne(d => d.Course)
                     .WithMany(p => p.Topics)
                     .HasForeignKey(d => d.CourseId)
-                    .HasConstraintName("FK__Topic__CourseId__5DCAEF64");
+                    .HasConstraintName("FK__Topic__CourseId__5FB337D6");
             });
 
             OnModelCreatingPartial(modelBuilder);

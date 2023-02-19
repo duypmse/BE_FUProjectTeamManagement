@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Models;
 
-namespace TeamManagement.Repository
+namespace TeamManagement.Repositories.TeacherRepository
 {
     public class TeacherRepository : ITeacherRepository
     {
