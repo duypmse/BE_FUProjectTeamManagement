@@ -154,3 +154,7 @@ E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\n
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Google.Api.Gax.dll
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Google.Api.Gax.Rest.dll
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Firebase.Auth.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Configurations\firebase-adminsdk.json
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Newtonsoft.Json.Bson.dll

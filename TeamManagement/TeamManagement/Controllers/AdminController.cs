@@ -21,6 +21,7 @@ using Firebase.Auth.Repository;
 using Firebase.Auth;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using FirebaseAdmin.Messaging;
 
 namespace TeamManagement.Controllers
 {
@@ -29,9 +30,32 @@ namespace TeamManagement.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminRepository _adminRepository;
+
         public AdminController(IAdminRepository adminRepository)
         {
             _adminRepository = adminRepository;
         }
+        [HttpPost]
+        public async Task<ActionResult> SendPushNotification()
+        {
+            var message = new Message()
+            {
+                Notification = new Notification
+                {
+                    Title = "FCM Test",
+                    Body = "This is a test notification"
+                },
+                Topic = "my_topic",
+            };
+            try
+            {
+                var response = await FirebaseMessaging.DefaultInstance.SendAsync(message).ConfigureAwait(false);
+                return Ok(response);
+            }
+            catch (FirebaseMessagingException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        } 
     }
 }
