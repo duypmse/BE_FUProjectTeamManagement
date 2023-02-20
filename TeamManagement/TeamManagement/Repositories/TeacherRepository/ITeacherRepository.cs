@@ -10,6 +10,7 @@ namespace TeamManagement.Repositories.TeacherRepository
         Task<List<TeacherDTO>> GetAllTeacherAsync();
         Task<TeacherDTO> GetTeacherByIdAsync(int id);
         Task<TeacherDTO> GetTeacherByEmailAsync(string email);
+        Task<List<CourseDTO>> GetListCourseByTeacherIdAsync(int teacherId);
         Task AddTeacherAsync(TeacherDTO teacher);
         Task UpdateTeacherAsync(Teacher teacher);
         Task DeleteTeacherAsync(int id);

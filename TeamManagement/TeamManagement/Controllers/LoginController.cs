@@ -28,14 +28,14 @@ namespace TeamManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginWithGoogle(string email)
+        public async Task<IActionResult> LoginWithGoogle([FromBody] EmailDTO email)
         {
-            var loginUser = await _loginRepository.LoginAsync(email);
+            var loginUser = await _loginRepository.LoginAsync(email.Email);
             if (loginUser == null)
             {
                 return NotFound();
             }
-            return Ok(loginUser);
+            return  Ok(loginUser);
         }
     }
 }

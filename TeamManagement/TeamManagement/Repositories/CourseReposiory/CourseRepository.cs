@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace TeamManagement.Repositories.CourseReposiory
         }
         public async Task UpdateCoursesAsync(Course course)
         {
-            var co = _context.Courses.SingleOrDefaultAsync(coo => coo.CourseId == course.CourseId);
+            var co = _context.Courses.SingleOrDefaultAsync(c => c.CourseId == course.CourseId);
             if (co != null)
             {
                 _context.Courses.Update(course);
@@ -57,6 +58,12 @@ namespace TeamManagement.Repositories.CourseReposiory
                 _context.Courses.Remove(co);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<TeamDTO>> GetListTeamByCourseIdAsync(int courseId)
+        {
+            var listTeam = await _context.CourseTeams.Where(c => c.CourseId == courseId).Select(t => t.Team).ToListAsync();
+            return _mapper.Map<List<TeamDTO>>(listTeam);
         }
     }
 }

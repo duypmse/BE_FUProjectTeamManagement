@@ -1,4 +1,5 @@
 ﻿using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -14,10 +15,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using TeamManagement.Configurations;
 using TeamManagement.Helper;
 using TeamManagement.Models;
 using TeamManagement.Repositories.AdminRepository;
@@ -40,6 +43,24 @@ namespace TeamManagement
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var firebaseApp = FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile("Configurations/firebase-adminsdk.json")
+            });
+            // Add CORS service
+            services.AddCors(options =>
+            {
+                options.AddPolicy("apiCorsPolicy", builder =>
+                {
+                    builder.WithOrigins("http://localhost:5001", "https://cosmic-starship-a97dc2.netlify.app")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials(); 
+                });
+            });
+            services.RegisterSwaggerModule();
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddSingleton(firebaseApp);
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ITeacherRepository, TeacherRepository>();
@@ -54,51 +75,27 @@ namespace TeamManagement
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["Jwt:Issuer"],
-                    ValidAudience = Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    ValidIssuer = Configuration["JWT:Issuer"],
+                    ValidAudience = Configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
                 };
             });
             services.AddDbContext<FUProjectTeamManagementContext>(option =>
             {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDB"));
             });
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TeamManagement", Version = "v1" });
-                var securityScheme = new OpenApiSecurityScheme
-                {
-                    Name = "JWT Authentication",
-                    Description = "Enter JWT Bearer token **_only_**",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
-                    Reference = new OpenApiReference
-                    {
-                        Id = JwtBearerDefaults.AuthenticationScheme,
-                        Type = ReferenceType.SecurityScheme
-                    }
-                };
-                c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement{{securityScheme, new string[] { }}});
-            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseApplicationSwagger();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TeamManagement v1");
-            });
-
+            app.UseCors("apiCorsPolicy");
             app.UseHttpsRedirection();
 
             app.UseRouting();

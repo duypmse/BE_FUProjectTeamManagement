@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Google.Apis.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Models;
@@ -8,7 +11,6 @@ using TeamManagement.Repositories.CourseReposiory;
 
 namespace TeamManagement.Controllers
 {
-    [Authorize(Roles = "admin, teacher")]
     [Route("api/[controller]")]
     [ApiController]
     public class CourseController : ControllerBase
@@ -22,23 +24,25 @@ namespace TeamManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCourse()
         {
-            try
-            {
-                return Ok(await _courseRepository.GetAllCoursesAsync());
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            return Ok(await _courseRepository.GetAllCoursesAsync());
         }
-
+        [HttpGet("{courseId}/Team")]
+        public async Task<IActionResult> GetListTeamByCourseId(int courseId)
+        {
+            var listTeam = await _courseRepository.GetListTeamByCourseIdAsync(courseId);
+            if (!listTeam.Any())
+            {
+                return NoContent();
+            }
+            return Ok(listTeam);
+        }
         [HttpPost]
         public async Task<IActionResult> AddNewCourse(CourseDTO course)
         {
             var existingCourse = await _courseRepository.GetCourseByNameAsync(course.CourseName);
             if (existingCourse != null)
             {
-                return BadRequest("This Course is existed");
+                return BadRequest();
             }
             else
             {
