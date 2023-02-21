@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Google.Apis.Upload;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -64,6 +65,12 @@ namespace TeamManagement.Repositories.CourseReposiory
         {
             var listTeam = await _context.CourseTeams.Where(c => c.CourseId == courseId).Select(t => t.Team).ToListAsync();
             return _mapper.Map<List<TeamDTO>>(listTeam);
+        }
+
+        public async Task<List<StudentDTO>> GetListStudentByCourseIdAsync(int courseId)
+        {
+            var listStudent = await _context.Participants.Where(c => c.CourseId == courseId).Select(s => s.Stu).ToListAsync();
+            return _mapper.Map<List<StudentDTO>>(listStudent);
         }
     }
 }

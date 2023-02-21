@@ -36,6 +36,17 @@ namespace TeamManagement.Controllers
             }
             return Ok(listTeam);
         }
+
+        [HttpGet("{courseId}/Student")]
+        public async Task<IActionResult> GetListStudentByCourseId(int courseId)
+        {
+            var listStudent = await _courseRepository.GetListStudentByCourseIdAsync(courseId);
+            if (!listStudent.Any())
+            {
+                return NoContent();
+            }
+            return Ok(listStudent); 
+        }
         [HttpPost]
         public async Task<IActionResult> AddNewCourse(CourseDTO course)
         {
