@@ -66,7 +66,9 @@ namespace TeamManagement.Repositories.TeacherRepository
 
         public async Task<List<CourseDTO>> GetListCourseByTeacherIdAsync(int teacherId)
         {
-            var listCourse = await _context.TeacherCourses.Where(t => t.TeacherId == teacherId).Select(c => c.Course).Where(s => s.Status == 1).ToListAsync();
+            var listCourse = await _context.TeacherCourses.Where(t => t.TeacherId == teacherId)
+                                                          .Select(c => c.Course)
+                                                          .Where(s => s.Status == 1).ToListAsync();
             return _mapper.Map<List<CourseDTO>>(listCourse);
         }
     }
