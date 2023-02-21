@@ -54,7 +54,7 @@ namespace TeamManagement.Repositories.LoginRepository
                         expires: DateTime.UtcNow.AddMinutes(30),
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])), SecurityAlgorithms.HmacSha256)
                     );
-                    return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), role});
+                    return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), role, status = 200});
                 }
                 else if (teacher != null)
                 {
@@ -71,7 +71,7 @@ namespace TeamManagement.Repositories.LoginRepository
                         expires: DateTime.UtcNow.AddMinutes(30),
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])), SecurityAlgorithms.HmacSha256)
                     );
-                    return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), role });
+                    return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), role, status = 200});
                 }
                 else if (student != null)
                 {
@@ -88,7 +88,7 @@ namespace TeamManagement.Repositories.LoginRepository
                         expires: DateTime.UtcNow.AddMinutes(30),
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])), SecurityAlgorithms.HmacSha256)
                     );
-                    return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), role });
+                    return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), role, status = 200});
                 }
             }
             return null;

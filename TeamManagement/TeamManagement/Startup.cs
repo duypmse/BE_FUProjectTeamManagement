@@ -28,6 +28,7 @@ using TeamManagement.Repositories.CourseReposiory;
 using TeamManagement.Repositories.LoginRepository;
 using TeamManagement.Repositories.StudentRepository;
 using TeamManagement.Repositories.TeacherRepository;
+using TeamManagement.Repositories.TeamRepository;
 
 namespace TeamManagement
 {
@@ -61,6 +62,7 @@ namespace TeamManagement
             services.RegisterSwaggerModule();
             services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton(firebaseApp);
+          
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ITeacherRepository, TeacherRepository>();
@@ -68,6 +70,9 @@ namespace TeamManagement
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ILoginRepository, LoginRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
+
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
