@@ -37,11 +37,18 @@ namespace TeamManagement.Repositories.TeacherRepository
             return _mapper.Map<TeacherDTO>(teacher);
         }
 
-        public async Task AddTeacherAsync(TeacherDTO teacherDto)
+        public async Task<bool> CreateTeacherAsync(TeacherDTO teacherDto)
         {
-            var newTeacher = _mapper.Map<Teacher>(teacherDto);
-            await _context.Teachers.AddAsync(newTeacher);
-            await _context.SaveChangesAsync();
+            var existingEmail = _context.Teachers.Where(e => e.TeacherEmail == teacherDto.TeacherEmail).FirstOrDefault();
+            if (existingEmail == null)
+            {
+                var newTeacher = _mapper.Map<Teacher>(teacherDto);
+                newTeacher.Status = 1;
+                await _context.Teachers.AddAsync(newTeacher);
+                await _context.SaveChangesAsync();
+                return true;
+            }   
+            return false;
         }
 
         public async Task UpdateTeacherAsync(Teacher teacher)

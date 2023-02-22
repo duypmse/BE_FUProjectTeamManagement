@@ -13,6 +13,7 @@ namespace TeamManagement.Helper
             CreateMap<Course, CourseDTO>().ReverseMap();
             CreateMap<Team, TeamDTO>().ReverseMap();    
             CreateMap<Student, StudentDTO>().ReverseMap();
+            CreateMap<Admin, AdminDTO>().ReverseMap();  
         }
     }
 }

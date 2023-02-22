@@ -36,9 +36,10 @@ namespace TeamManagement.Repositories.CourseReposiory
             var course = await _context.Courses.Where(c => c.CourseName == courseName).FirstOrDefaultAsync();
             return _mapper.Map<CourseDTO>(course);
         }
-        public async Task AddCoursesAsync(CourseDTO courseDto)
+        public async Task CreateCoursesAsync(CourseDTO courseDto)
         {
             var newCourse = _mapper.Map<Course>(courseDto);
+            newCourse.Status = 1;
             await _context.Courses.AddAsync(newCourse);
             await _context.SaveChangesAsync();
         }

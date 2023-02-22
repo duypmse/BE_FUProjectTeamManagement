@@ -12,7 +12,7 @@ namespace TeamManagement.Repositories.CourseReposiory
         Task<CourseDTO> GetCourseByNameAsync(string courseName);
         Task<List<TeamDTO>> GetListTeamByCourseIdAsync(int courseId);
         Task<List<StudentDTO>> GetListStudentByCourseIdAsync(int courseId);
-        Task AddCoursesAsync(CourseDTO courseDto);
+        Task CreateCoursesAsync(CourseDTO courseDto);
         Task UpdateCoursesAsync(Course course);
         Task DeleteCoursesAsync(int id);
     }

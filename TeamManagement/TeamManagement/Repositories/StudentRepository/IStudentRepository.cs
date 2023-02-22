@@ -9,5 +9,6 @@ namespace TeamManagement.Repositories.StudentRepository
         Task<List<StudentDTO>> GetAllStudent();
         Task<StudentDTO> StudentDTOFindById(int id);
         Task<StudentDTO> StudentFindByEmailAsync(string email);
+        Task<bool> CreateAStudentAsync(StudentDTO studentDTO);
     }
 }
