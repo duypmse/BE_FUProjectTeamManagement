@@ -44,6 +44,7 @@ namespace TeamManagement.Repositories.TeamRepository
             {
                 throw new Exception("Team not found");
             }
+            team.TeamCount++;
             var participant = new Participant()
             {
                 Team = team,
@@ -52,6 +53,21 @@ namespace TeamManagement.Repositories.TeamRepository
             };
             await _context.AddAsync(participant);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> CreateATeamAsync(TeamDTO teamDto)
+        {
+            var existingTeamName = _context.Teams.Where(t => t.TeamName== teamDto.TeamName).FirstOrDefault();
+            if(existingTeamName == null)
+            {
+                var newTeam = _mapper.Map<Team>(teamDto);
+                newTeam.TeamCount = 0;
+                newTeam.Status = 1;
+                await _context.AddAsync(newTeam);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

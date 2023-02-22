@@ -34,6 +34,16 @@ namespace TeamManagement.Controllers
             }
             return Ok(listStudent);
         }
+        [HttpPost]
+        public async Task<IActionResult> CreateATeamAsync(TeamDTO teamDto)
+        {
+            var newTeam = await _teamRepository.CreateATeamAsync(teamDto);
+            if (!newTeam)
+            {
+                return BadRequest("Name's team existing");
+            }
+            return Ok("Successfully created");
+        }
         [HttpPut]
         public async Task<IActionResult> AddStudentToTeam(int teamId, int studentId)
         {

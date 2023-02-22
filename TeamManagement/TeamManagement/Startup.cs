@@ -26,6 +26,7 @@ using TeamManagement.Models;
 using TeamManagement.Repositories.AdminRepository;
 using TeamManagement.Repositories.CourseReposiory;
 using TeamManagement.Repositories.LoginRepository;
+using TeamManagement.Repositories.SemesterRepository;
 using TeamManagement.Repositories.StudentRepository;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repositories.TeamRepository;
@@ -73,6 +74,7 @@ namespace TeamManagement
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ILoginRepository, LoginRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<ISemesterRepository, SemesterRepository>();
 
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {

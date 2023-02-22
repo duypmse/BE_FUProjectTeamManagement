@@ -41,6 +41,13 @@ namespace TeamManagement.Controllers
             var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
             return teacher == null ? NotFound() : Ok(teacher);
         }
+        [HttpGet("/[Action]/{teacherName}")]
+        public async Task<IActionResult> GetTeacherByName(string teacherName)
+        {
+            var teacher = await _teacherRepository.GetTeacherByNameAsync(teacherName);
+            if(teacher == null) return NoContent();
+            return Ok(teacher);
+        }
 
         [AllowAnonymous]
         [HttpGet("Course/{teacherId}")]
