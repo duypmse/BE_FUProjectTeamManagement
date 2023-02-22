@@ -29,6 +29,7 @@ using TeamManagement.Repositories.LoginRepository;
 using TeamManagement.Repositories.StudentRepository;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repositories.TeamRepository;
+using static System.Net.WebRequestMethods;
 
 namespace TeamManagement
 {

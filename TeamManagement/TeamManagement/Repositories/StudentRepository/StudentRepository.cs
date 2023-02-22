@@ -33,5 +33,19 @@ namespace TeamManagement.Repositories.StudentRepository
         {
             throw new System.NotImplementedException();
         }
+
+        public async Task<bool> CreateAStudentAsync(StudentDTO studentDTO)
+        {
+            var existingEmail = _context.Students.Where(e => e.StuEmail == studentDTO.StuEmail).FirstOrDefault();
+            if(existingEmail == null)
+            {
+                var student = _mapper.Map<Student>(studentDTO);
+                student.Status = 1;
+                await _context.Students.AddAsync(student);
+                await _context.SaveChangesAsync();
+                return true;
+            }  
+            return false;
+        }
     }
 }

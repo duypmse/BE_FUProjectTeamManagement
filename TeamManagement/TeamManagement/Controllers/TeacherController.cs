@@ -11,7 +11,6 @@ using TeamManagement.Repositories.TeacherRepository;
 
 namespace TeamManagement.Controllers
 {
-    [Authorize(Roles = "admin, teacher")]
     [Route("api/[controller]")]
     [ApiController]
     public class TeacherController : ControllerBase
@@ -56,17 +55,14 @@ namespace TeamManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTeacher(TeacherDTO teacher)
+        public async Task<IActionResult> AddTeacher(TeacherDTO teacherDto)
         {
-            try
-            {
-                await _teacherRepository.AddTeacherAsync(teacher);
-                return Ok();
-            }
-            catch
+            var teacher = await _teacherRepository.CreateTeacherAsync(teacherDto);
+            if (!teacher)
             {
                 return BadRequest();
             }
+            return Ok("Successfully created");
         }
 
         [HttpDelete("{id}")]

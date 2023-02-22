@@ -26,10 +26,32 @@ namespace TeamManagement.Repositories.TeamRepository
             return _mapper.Map<List<TeamDTO>>(listTeam);
         }
 
-        public async Task<List<StudentDTO>> GetListStudentByTeamIdAsync(int TeamId)
+        public async Task<List<StudentDTO>> GetListStudentByTeamIdAsync(int teamId)
         {
-            var listStudent = await _context.Participants.Where(t => t.TeamId == TeamId).Select(s => s.Stu).ToListAsync();
+            var listStudent = await _context.Participants.Where(t => t.TeamId == teamId).Select(s => s.Stu).ToListAsync();
             return _mapper.Map<List<StudentDTO>>(listStudent); 
+        }
+
+        public async Task AddStudentToTeamAsync(int teamId, int studentId)
+        {
+            var student = await _context.Participants.Where(s => s.StuId == studentId && s.CourseId != null).Select(t => t.Stu).FirstOrDefaultAsync();
+            var team = await _context.Teams.Where(t => t.TeamId == teamId).FirstOrDefaultAsync();
+            if(student == null)
+            {
+                throw new Exception("Student not found or not join course yet");
+            }
+            if(team == null)
+            {
+                throw new Exception("Team not found");
+            }
+            var participant = new Participant()
+            {
+                Team = team,
+                Stu = student,
+                Status = 1
+            };
+            await _context.AddAsync(participant);
+            await _context.SaveChangesAsync();
         }
     }
 }

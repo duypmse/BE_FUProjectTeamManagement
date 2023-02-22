@@ -34,5 +34,11 @@ namespace TeamManagement.Controllers
             }
             return Ok(listStudent);
         }
+        [HttpPut]
+        public async Task<IActionResult> AddStudentToTeam(int teamId, int studentId)
+        {
+            await _teamRepository.AddStudentToTeamAsync(teamId, studentId);
+            return Ok("Add successful");
+        }
     }
 }

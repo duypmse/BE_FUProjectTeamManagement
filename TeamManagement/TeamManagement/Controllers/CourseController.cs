@@ -48,7 +48,7 @@ namespace TeamManagement.Controllers
             return Ok(listStudent); 
         }
         [HttpPost]
-        public async Task<IActionResult> AddNewCourse(CourseDTO course)
+        public async Task<IActionResult> CreateNewCourse(CourseDTO course)
         {
             var existingCourse = await _courseRepository.GetCourseByNameAsync(course.CourseName);
             if (existingCourse != null)
@@ -57,7 +57,7 @@ namespace TeamManagement.Controllers
             }
             else
             {
-                await _courseRepository.AddCoursesAsync(course);
+                await _courseRepository.CreateCoursesAsync(course);
                 return Ok();
             }
         }

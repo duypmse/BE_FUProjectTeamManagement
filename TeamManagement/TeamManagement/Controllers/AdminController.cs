@@ -35,27 +35,37 @@ namespace TeamManagement.Controllers
         {
             _adminRepository = adminRepository;
         }
-        [HttpPost]
-        public async Task<ActionResult> SendPushNotification()
+        [HttpGet]
+        public async Task<IActionResult> GetListAdminAsync()
         {
-            var message = new Message()
+            var listAdmin = await _adminRepository.GetListAdminAsync();
+            if (!listAdmin.Any())
             {
-                Notification = new Notification
-                {
-                    Title = "FCM Test",
-                    Body = "This is a test notification"
-                },
-                Topic = "my_topic",
-            };
-            try
-            {
-                var response = await FirebaseMessaging.DefaultInstance.SendAsync(message).ConfigureAwait(false);
-                return Ok(response);
+                return NotFound();
             }
-            catch (FirebaseMessagingException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        } 
+            return Ok(listAdmin);
+        }
+        //[HttpPost]
+        //public async Task<ActionResult> SendPushNotification()
+        //{
+        //    var message = new Message()
+        //    {
+        //        Notification = new Notification
+        //        {
+        //            Title = "FCM Test",
+        //            Body = "This is a test notification"
+        //        },
+        //        Topic = "my_topic",
+        //    };
+        //    try
+        //    {
+        //        var response = await FirebaseMessaging.DefaultInstance.SendAsync(message).ConfigureAwait(false);
+        //        return Ok(response);
+        //    }
+        //    catch (FirebaseMessagingException ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //} 
     }
 }
