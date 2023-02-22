@@ -11,6 +11,7 @@ using TeamManagement.Repositories.CourseReposiory;
 
 namespace TeamManagement.Controllers
 {
+    [Authorize(Roles = "teacher")]
     [Route("api/[controller]")]
     [ApiController]
     public class CourseController : ControllerBase

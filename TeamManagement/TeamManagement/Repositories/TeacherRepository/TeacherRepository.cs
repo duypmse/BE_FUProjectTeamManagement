@@ -30,6 +30,11 @@ namespace TeamManagement.Repositories.TeacherRepository
             var teacher = await _context.Teachers!.Where(t => t.TeacherId == id).FirstOrDefaultAsync();
             return _mapper.Map<TeacherDTO>(teacher);
         }
+        public async Task<TeacherDTO> GetTeacherByNameAsync(string teacherName)
+        {
+            var teacher = await _context.Teachers.Where(t => t.TeacherName == teacherName).FirstOrDefaultAsync();
+            return _mapper.Map<TeacherDTO>(teacher);
+        }
 
         public async Task<TeacherDTO> GetTeacherByEmailAsync(string email)
         {
@@ -78,5 +83,6 @@ namespace TeamManagement.Repositories.TeacherRepository
                                                           .Where(s => s.Status == 1).ToListAsync();
             return _mapper.Map<List<CourseDTO>>(listCourse);
         }
+
     }
 }

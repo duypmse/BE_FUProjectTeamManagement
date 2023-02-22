@@ -35,6 +35,7 @@ namespace TeamManagement.Controllers
         {
             _adminRepository = adminRepository;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetListAdminAsync()
         {
