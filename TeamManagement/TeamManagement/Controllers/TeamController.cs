@@ -35,9 +35,9 @@ namespace TeamManagement.Controllers
             return Ok(listStudent);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateATeamAsync(TeamDTO teamDto)
+        public async Task<IActionResult> CreateATeamAsync(int courseId, TeamDTO teamDto)
         {
-            var newTeam = await _teamRepository.CreateATeamAsync(teamDto);
+            var newTeam = await _teamRepository.CreateATeamToCourseAsync(courseId, teamDto);
             if (!newTeam)
             {
                 return BadRequest("Name's team existing");
@@ -47,7 +47,11 @@ namespace TeamManagement.Controllers
         [HttpPut]
         public async Task<IActionResult> AddStudentToTeam(int teamId, int studentId)
         {
-            await _teamRepository.AddStudentToTeamAsync(teamId, studentId);
+            var addNew = await _teamRepository.AddStudentToTeamAsync(teamId, studentId);
+            if (!addNew)
+            {
+                return BadRequest("Student not found or not join course yet");
+            }
             return Ok("Add successful");
         }
     }

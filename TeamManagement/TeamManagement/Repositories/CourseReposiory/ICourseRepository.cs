@@ -11,8 +11,9 @@ namespace TeamManagement.Repositories.CourseReposiory
         Task<CourseDTO> GetCourseByIdAsync(int id);
         Task<CourseDTO> GetCourseByNameAsync(string courseName);
         Task<List<TeamDTO>> GetListTeamByCourseIdAsync(int courseId);
-        Task<List<StudentDTO>> GetListStudentByCourseIdAsync(int courseId);
-        Task CreateCoursesAsync(CourseDTO courseDto);
+        Task<List<StudentDTO>> GetListStudentNonTeamByCourseIdAsync(int courseId);
+        Task<bool> CreateCoursesAsync(CourseDTO courseDto);
+        Task<bool> StudentJoinCourse(int courseId, string keyEnroll, int studentId);
         Task UpdateCoursesAsync(Course course);
         Task DeleteCoursesAsync(int id);
     }

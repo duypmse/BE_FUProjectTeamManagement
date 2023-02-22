@@ -36,12 +36,17 @@ namespace TeamManagement.Repositories.CourseReposiory
             var course = await _context.Courses.Where(c => c.CourseName == courseName).FirstOrDefaultAsync();
             return _mapper.Map<CourseDTO>(course);
         }
-        public async Task CreateCoursesAsync(CourseDTO courseDto)
+        public async Task<bool> CreateCoursesAsync(CourseDTO courseDto)
         {
             var newCourse = _mapper.Map<Course>(courseDto);
-            newCourse.Status = 1;
-            await _context.Courses.AddAsync(newCourse);
-            await _context.SaveChangesAsync();
+            if ( courseDto != null)
+            {
+                newCourse.Status = 1;
+                await _context.Courses.AddAsync(newCourse);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;     
         }
         public async Task UpdateCoursesAsync(Course course)
         {
@@ -68,10 +73,31 @@ namespace TeamManagement.Repositories.CourseReposiory
             return _mapper.Map<List<TeamDTO>>(listTeam);
         }
 
-        public async Task<List<StudentDTO>> GetListStudentByCourseIdAsync(int courseId)
+        public async Task<List<StudentDTO>> GetListStudentNonTeamByCourseIdAsync(int courseId)
         {
-            var listStudent = await _context.Participants.Where(c => c.CourseId == courseId).Select(s => s.Stu).ToListAsync();
+            var listStudent = await _context.Participants.Where(c => c.CourseId == courseId && c.TeamId == null).Select(s => s.Stu).ToListAsync();
             return _mapper.Map<List<StudentDTO>>(listStudent);
+        }
+
+        public async Task<bool> StudentJoinCourse(int courseId, string keyEnroll, int studentId)
+        {
+            var course = await _context.Courses.Where(c => c.CourseId == courseId && c.KeyEnroll == keyEnroll)
+                                               .FirstOrDefaultAsync();
+            var student = await _context.Students.Where(s => s.StuId == studentId).FirstOrDefaultAsync();
+            var par = await _context.Participants.Where(p => p.StuId == studentId).FirstOrDefaultAsync();
+            if(course != null && student != null && par == null)
+            {
+                var newP = new Participant()
+                {
+                    Course = course,
+                    Stu = student,
+                    Status = 1
+                };
+                await _context.AddAsync(newP);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }
