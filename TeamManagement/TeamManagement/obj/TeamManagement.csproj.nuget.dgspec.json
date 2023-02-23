@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Project\\C# Project\\TeamManagament\\TeamManagement\\TeamManagement\\TeamManagement.csproj": {}
+    "D:\\Sem7\\SWD392\\BE_FUProjectTeamManagement\\TeamManagement\\TeamManagement\\TeamManagement.csproj": {}
   },
   "projects": {
-    "E:\\Project\\C# Project\\TeamManagament\\TeamManagement\\TeamManagement\\TeamManagement.csproj": {
+    "D:\\Sem7\\SWD392\\BE_FUProjectTeamManagement\\TeamManagement\\TeamManagement\\TeamManagement.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Project\\C# Project\\TeamManagament\\TeamManagement\\TeamManagement\\TeamManagement.csproj",
+        "projectUniqueName": "D:\\Sem7\\SWD392\\BE_FUProjectTeamManagement\\TeamManagement\\TeamManagement\\TeamManagement.csproj",
         "projectName": "TeamManagement",
-        "projectPath": "E:\\Project\\C# Project\\TeamManagament\\TeamManagement\\TeamManagement\\TeamManagement.csproj",
-        "packagesPath": "C:\\Users\\guuhi\\.nuget\\packages\\",
-        "outputPath": "E:\\Project\\C# Project\\TeamManagament\\TeamManagement\\TeamManagement\\obj\\",
+        "projectPath": "D:\\Sem7\\SWD392\\BE_FUProjectTeamManagement\\TeamManagement\\TeamManagement\\TeamManagement.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "D:\\Sem7\\SWD392\\BE_FUProjectTeamManagement\\TeamManagement\\TeamManagement\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\guuhi\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -120,7 +119,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }
