@@ -37,8 +37,8 @@ namespace TeamManagement.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("server =(local); database = FUProjectTeamManagement;uid=sa;pwd=1;TrustServerCertificate=True;");
-                optionsBuilder.UseSqlServer("Server=tcp:fu-project-team1.database.windows.net,1433;Initial Catalog=DBProjectTeamManagement;Persist Security Info=False;User ID=swd392;Password=Spring@2023;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer("server =(local); database = FUProjectTeamManagement;uid=sa;pwd=1;TrustServerCertificate=True;");
+                //optionsBuilder.UseSqlServer("Server=tcp:fu-project-team1.database.windows.net,1433;Initial Catalog=DBProjectTeamManagement;Persist Security Info=False;User ID=swd392;Password=Spring@2023;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 

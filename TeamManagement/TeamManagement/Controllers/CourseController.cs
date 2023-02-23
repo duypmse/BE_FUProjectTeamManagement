@@ -38,16 +38,17 @@ namespace TeamManagement.Controllers
             return Ok(listTeam);
         }
 
-        [HttpGet("{courseId}/Student")]
+        [HttpGet("{courseId}/StudentNonTeam")]
         public async Task<IActionResult> GetListStudentByCourseId(int courseId)
         {
-            var listStudent = await _courseRepository.GetListStudentByCourseIdAsync(courseId);
+            var listStudent = await _courseRepository.GetListStudentNonTeamByCourseIdAsync(courseId);
             if (!listStudent.Any())
             {
                 return NoContent();
             }
             return Ok(listStudent); 
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateNewCourse(CourseDTO course)
         {
@@ -58,11 +59,24 @@ namespace TeamManagement.Controllers
             }
             else
             {
-                await _courseRepository.CreateCoursesAsync(course);
-                return Ok();
+                var newCourse = await _courseRepository.CreateCoursesAsync(course);
+                if(!newCourse)
+                {
+                    return BadRequest();
+                }
+                return Ok("Successfully created!");
             }
         }
-
+        [HttpPost("JoinCourse")]
+        public async Task<IActionResult> StudentJoinCourse(int courseId, string keyEnroll, int studentId)
+        {
+            var joining = await _courseRepository.StudentJoinCourse(courseId, keyEnroll, studentId);
+            if (!joining)
+            {
+                return BadRequest();
+            }
+            return Ok("Successfully joined");
+        }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteACourse(int id)
         {
