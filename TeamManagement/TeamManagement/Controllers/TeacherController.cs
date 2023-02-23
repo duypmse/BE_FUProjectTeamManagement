@@ -50,7 +50,7 @@ namespace TeamManagement.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("Course/{teacherId}")]
+        [HttpGet("{teacherId}/Course")]
         public async Task<ActionResult> GetListCourseByTeacherId(int teacherId)
         {
             var courses = await _teacherRepository.GetListCourseByTeacherIdAsync(teacherId);
