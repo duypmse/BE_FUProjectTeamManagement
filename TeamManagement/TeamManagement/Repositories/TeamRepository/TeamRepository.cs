@@ -29,7 +29,7 @@ namespace TeamManagement.Repositories.TeamRepository
         public async Task<List<StudentDTO>> GetListStudentByTeamIdAsync(int teamId)
         {
             var listStudent = await _context.Participants.Where(t => t.TeamId == teamId).Select(s => s.Stu).ToListAsync();
-            return _mapper.Map<List<StudentDTO>>(listStudent); 
+            return _mapper.Map<List<StudentDTO>>(listStudent);
         }
 
         public async Task<bool> AddStudentToTeamAsync(int teamId, int studentId)
@@ -41,10 +41,10 @@ namespace TeamManagement.Repositories.TeamRepository
             {
                 return false;
             }
-            if(participant == null || team == null)
+            if (participant == null || team == null)
             {
                 return false;
-            } 
+            }
             team.TeamCount++;
             participant.Team = team;
             participant.Status = 1;
@@ -54,9 +54,9 @@ namespace TeamManagement.Repositories.TeamRepository
 
         public async Task<bool> CreateATeamToCourseAsync(int courseId, TeamDTO teamDto)
         {
-            var existingTeamName = _context.Teams.Where(t => t.TeamName== teamDto.TeamName).FirstOrDefault();
             var course = await _context.Courses.Where(c => c.CourseId == courseId).FirstOrDefaultAsync();
-            if(existingTeamName == null)
+            var teacher = await _context.TeacherCourses.Where(tc => tc.CourseId == courseId).Select(t => t.Teacher).FirstOrDefaultAsync();
+            if(course != null)
             {
                 var newTeam = _mapper.Map<Team>(teamDto);
                 var newCourse = new CourseTeam()
@@ -65,9 +65,31 @@ namespace TeamManagement.Repositories.TeamRepository
                     Team = newTeam
                 };
                 await _context.AddAsync(newCourse);
+
+                var newTeacherTeam = new TeacherTeam()
+                {
+                    Teacher = teacher,
+                    Team = newTeam
+                };
+                await _context.AddAsync(newTeacherTeam);
+                
                 newTeam.TeamCount = 0;
                 newTeam.Status = 1;
                 await _context.AddAsync(newTeam);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> RemeoveATeamAsync(int teamId)
+        {
+            var team = await _context.Teams.Where(t => t.TeamId == teamId).FirstOrDefaultAsync();
+            var par = await _context.Participants.Where(p => p.TeamId == teamId).Select(t => t.Team).FirstOrDefaultAsync();
+            if(team != null)
+            {
+                _context.Remove(par);
+                _context.Remove(team);
                 await _context.SaveChangesAsync();
                 return true;
             }

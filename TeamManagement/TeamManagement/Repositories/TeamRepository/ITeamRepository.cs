@@ -10,5 +10,6 @@ namespace TeamManagement.Repositories.TeamRepository
         Task<List<StudentDTO>> GetListStudentByTeamIdAsync(int teamId);
         Task<bool> AddStudentToTeamAsync(int teamId, int studentId);
         Task<bool> CreateATeamToCourseAsync(int courseId, TeamDTO teamDto);
+        Task<bool> RemeoveATeamAsync(int teamId);
     }
 }

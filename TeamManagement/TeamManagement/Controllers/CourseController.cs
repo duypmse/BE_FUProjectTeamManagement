@@ -48,6 +48,7 @@ namespace TeamManagement.Controllers
             }
             return Ok(listStudent); 
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateNewCourse(CourseDTO course)
         {
