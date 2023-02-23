@@ -35,7 +35,7 @@ namespace TeamManagement.Controllers
             }
             return Ok(listStudent);
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> CreateATeamAsync(int courseId, TeamDTO teamDto)
         {
@@ -47,7 +47,7 @@ namespace TeamManagement.Controllers
             return Ok("Successfully created");
         }
 
-        [HttpPut]
+        [HttpPut("{teamId}/AddStudent/{studentId}")]
         public async Task<IActionResult> AddStudentToTeam(int teamId, int studentId)
         {
             var addNew = await _teamRepository.AddStudentToTeamAsync(teamId, studentId);
@@ -57,16 +57,25 @@ namespace TeamManagement.Controllers
             }
             return Ok("Add successful");
         }
-
+        [HttpPut("{teamId}/Remove/{studentId}")]
+        public async Task<IActionResult> RemoveAStudentInTeam(int teamId, int studentId)
+        {
+            var remove = await _teamRepository.RemoveAStudentInTeamAsync(studentId, teamId);
+            if (!remove)
+            {
+                return BadRequest();
+            }
+            return Ok("Successfully removed!");
+        }
         [HttpDelete("{teamId}")]
         public async Task<IActionResult> RemoveATeam(int teamId)
         {
-            var removeTeam = await _teamRepository.RemeoveATeamAsync(teamId);
+            var removeTeam = await _teamRepository.RemoveATeamAsync(teamId);
             if (!removeTeam)
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok("Successfully removed!");
         }
     }
 }

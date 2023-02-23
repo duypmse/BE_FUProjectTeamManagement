@@ -36,8 +36,8 @@ namespace TeamManagement.Repositories.TeamRepository
         {
             var participant = await _context.Participants.Where(s => s.StuId == studentId && s.CourseId != null && s.TeamId == null).FirstOrDefaultAsync();
             var team = await _context.Teams.Where(t => t.TeamId == teamId).FirstOrDefaultAsync();
-            var existingTeam = await _context.Participants.Where(e => e.StuId == studentId && e.TeamId == teamId).FirstOrDefaultAsync();
-            if (existingTeam != null)
+            var alreadyInteam = await _context.Participants.Where(e => e.StuId == studentId && e.TeamId == teamId).FirstOrDefaultAsync();
+            if (alreadyInteam != null)
             {
                 return false;
             }
@@ -82,18 +82,53 @@ namespace TeamManagement.Repositories.TeamRepository
             return false;
         }
 
-        public async Task<bool> RemeoveATeamAsync(int teamId)
+        public async Task<bool> RemoveATeamAsync(int teamId)
         {
             var team = await _context.Teams.Where(t => t.TeamId == teamId).FirstOrDefaultAsync();
-            var par = await _context.Participants.Where(p => p.TeamId == teamId).Select(t => t.Team).FirstOrDefaultAsync();
-            if(team != null)
+            var participant = await _context.Participants.Where(p => p.TeamId == teamId).ToListAsync();
+            var teacherTeam = await _context.TeacherTeams.Where(tt => tt.TeamId == teamId).ToListAsync();
+            var teamTopic = await _context.TeamTopics.Where(tp => tp.TeamId == teamId).ToListAsync();
+            var courseTeam = await _context.CourseTeams.Where(ct => ct.TeamId == teamId).ToListAsync(); 
+            if (participant != null)
             {
-                _context.Remove(par);
-                _context.Remove(team);
+                foreach (var p in participant)
+                {
+                    p.TeamId = null;
+                }
+            }
+            if (teacherTeam != null)
+            {
+                _context.TeacherTeams.RemoveRange(teacherTeam);
+            }
+            if (teamTopic != null)
+            {
+                _context.TeamTopics.RemoveRange(teamTopic);
+            }
+            if(courseTeam != null)
+            {
+                _context.CourseTeams.RemoveRange(courseTeam);
+            }
+            if (team != null)
+            {
+                _context.Teams.Remove(team);
                 await _context.SaveChangesAsync();
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> RemoveAStudentInTeamAsync(int studentId, int teamId)
+        {
+            var participant = await _context.Participants.Where(p => p.StuId == studentId && p.TeamId == teamId).FirstOrDefaultAsync();
+            var team = await _context.Teams.Where(t => t.TeamId == teamId).FirstOrDefaultAsync();
+            if (participant == null || team == null)
+            {
+                return false;
+            }
+            team.TeamCount--;
+            participant.TeamId = null;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
