@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repositories.TeamRepository;
+using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Controllers
 {
@@ -47,10 +48,10 @@ namespace TeamManagement.Controllers
             return Ok("Successfully created");
         }
 
-        [HttpPut("{teamId}/AddStudent/{studentId}")]
-        public async Task<IActionResult> AddStudentToTeam(int teamId, int studentId)
+        [HttpPut("{teamId}/Add-Students")]
+        public async Task<IActionResult> AddStudentToTeam(int teamId, StudentModel studentModel)
         {
-            var addNew = await _teamRepository.AddStudentToTeamAsync(teamId, studentId);
+            var addNew = await _teamRepository.AddStudentToTeamAsync(teamId, studentModel.studentIds);
             if (!addNew)
             {
                 return BadRequest("Student not found or not join course yet");

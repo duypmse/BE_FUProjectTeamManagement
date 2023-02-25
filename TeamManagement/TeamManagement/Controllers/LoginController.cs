@@ -11,8 +11,8 @@ using System;
 using TeamManagement.Models;
 using TeamManagement.Repositories.AdminRepository;
 using TeamManagement.Repositories.TeacherRepository;
-using TeamManagement.DTO;
 using TeamManagement.Repositories.LoginRepository;
+using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Controllers
 {
@@ -28,7 +28,7 @@ namespace TeamManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginWithGoogle([FromBody] EmailDTO email)
+        public async Task<IActionResult> LoginWithGoogle([FromBody] EmailModel email)
         {
             var loginUser = await _loginRepository.LoginAsync(email.Email);
             if (loginUser == null)

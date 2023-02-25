@@ -9,6 +9,7 @@ namespace TeamManagement.Repositories.SemesterRepository
     {
         Task<List<SemesterDTO>> GetAllSemesterAsync();
         Task<SemesterDTO> GetSemesterByNameAsync(string semesterName);
+        Task<SemesterDTO> GetSemesterByIdAsync(int semesterId);
         Task<bool> CreateSemesterAsync(SemesterDTO semesterDto);
     }
 }

@@ -32,22 +32,18 @@ namespace TeamManagement.Repositories.TeamRepository
             return _mapper.Map<List<StudentDTO>>(listStudent);
         }
 
-        public async Task<bool> AddStudentToTeamAsync(int teamId, int studentId)
+        public async Task<bool> AddStudentToTeamAsync(int teamId, List<int> studentIds)
         {
-            var participant = await _context.Participants.Where(s => s.StuId == studentId && s.CourseId != null && s.TeamId == null).FirstOrDefaultAsync();
-            var team = await _context.Teams.Where(t => t.TeamId == teamId).FirstOrDefaultAsync();
-            var alreadyInteam = await _context.Participants.Where(e => e.StuId == studentId && e.TeamId == teamId).FirstOrDefaultAsync();
-            if (alreadyInteam != null)
-            {
-                return false;
+            var team = await _context.Teams.FindAsync(teamId);
+            if (team == null) return false;
+            var participants = await _context.Participants.Where(p => studentIds
+                                                          .Contains((int)p.StuId) && p.CourseId != null && p.TeamId == null)
+                                                          .ToListAsync();
+            if(participants == null) return false;
+            foreach( var p in participants ) {
+                p.Team = team;
+                team.TeamCount++;
             }
-            if (participant == null || team == null)
-            {
-                return false;
-            }
-            team.TeamCount++;
-            participant.Team = team;
-            participant.Status = 1;
             await _context.SaveChangesAsync();
             return true;
         }

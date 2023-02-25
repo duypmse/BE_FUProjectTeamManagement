@@ -30,6 +30,7 @@ namespace TeamManagement.Repositories.TeacherRepository
             var teacher = await _context.Teachers!.Where(t => t.TeacherId == id).FirstOrDefaultAsync();
             return _mapper.Map<TeacherDTO>(teacher);
         }
+
         public async Task<TeacherDTO> GetTeacherByNameAsync(string teacherName)
         {
             var teacher = await _context.Teachers.Where(t => t.TeacherName == teacherName).FirstOrDefaultAsync();
@@ -41,7 +42,7 @@ namespace TeamManagement.Repositories.TeacherRepository
             var teacher = await _context.Teachers.Where(t => t.TeacherEmail == email).FirstOrDefaultAsync();
             return _mapper.Map<TeacherDTO>(teacher);
         }
-
+        
         public async Task<bool> CreateTeacherAsync(TeacherDTO teacherDto)
         {
             var existingEmail = _context.Teachers.Where(e => e.TeacherEmail == teacherDto.TeacherEmail).FirstOrDefault();
@@ -52,7 +53,7 @@ namespace TeamManagement.Repositories.TeacherRepository
                 await _context.Teachers.AddAsync(newTeacher);
                 await _context.SaveChangesAsync();
                 return true;
-            }   
+            }
             return false;
         }
 
@@ -80,9 +81,28 @@ namespace TeamManagement.Repositories.TeacherRepository
         {
             var listCourse = await _context.TeacherCourses.Where(t => t.TeacherId == teacherId)
                                                           .Select(c => c.Course)
-                                                          .Where(s => s.Status == 1).ToListAsync();
+                                                          .Where(s => s.Status == 1)
+                                                          .ToListAsync();
             return _mapper.Map<List<CourseDTO>>(listCourse);
         }
 
+        public Task<List<SubjectDTO>> GetListSubjectOfTeacherAsync(int teacherId)
+        {
+            throw new System.NotImplementedException();
+        }
+        //public async Task<bool> AddCoursesToTeacherAsync(int teacherId, List<int> courseIds)
+        //{
+        //    var teacher = await _context.Teachers.FindAsync(teacherId);
+        //    if (teacher == null) return false;
+        //    var courses = await _context.Courses.Where(c => courseIds.Contains(c.CourseId)).ToListAsync();
+        //    if (courses.Any())
+        //    {
+        //        var teacherCourses = courses.Select(c => new TeacherCourse { TeacherId = teacherId, CourseId = c.CourseId });
+        //        await _context.TeacherCourses.AddRangeAsync(teacherCourses);
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    return false;
+        //}
     }
 }
