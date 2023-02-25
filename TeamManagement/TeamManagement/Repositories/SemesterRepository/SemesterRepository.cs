@@ -22,10 +22,14 @@ namespace TeamManagement.Repositories.SemesterRepository
             var listSemester = await _context.Semesters.ToListAsync();
             return _mapper.Map<List<SemesterDTO>>(listSemester);
         }
-
         public async Task<SemesterDTO> GetSemesterByNameAsync(string semesterName)
         {
             var semester = await _context.Semesters.Where(s => s.SemName== semesterName).FirstOrDefaultAsync();
+            return _mapper.Map<SemesterDTO>(semester);
+        }
+        public async Task<SemesterDTO> GetSemesterByIdAsync(int semesterId)
+        {
+            var semester = await _context.Semesters.FindAsync(semesterId);
             return _mapper.Map<SemesterDTO>(semester);
         }
         public async Task<bool> CreateSemesterAsync(SemesterDTO semesterDto)

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Models;
 using TeamManagement.Repositories.TeacherRepository;
+using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Controllers
 {
@@ -31,7 +32,7 @@ namespace TeamManagement.Controllers
             }
             catch
             {
-                return BadRequest();
+                return NoContent();
             }
         }
 
@@ -39,17 +40,15 @@ namespace TeamManagement.Controllers
         public async Task<IActionResult> GetTeacherById(int id)
         {
             var teacher = await _teacherRepository.GetTeacherByIdAsync(id);
-            return teacher == null ? NotFound() : Ok(teacher);
+            return teacher == null ? NoContent() : Ok(teacher);
         }
         [HttpGet("{teacherName}")]
         public async Task<IActionResult> GetTeacherByName(string teacherName)
         {
             var teacher = await _teacherRepository.GetTeacherByNameAsync(teacherName);
-            if(teacher == null) return NoContent();
+            if (teacher == null) return NoContent();
             return Ok(teacher);
         }
-
-        [AllowAnonymous]
         [HttpGet("{teacherId}/Course")]
         public async Task<ActionResult> GetListCourseByTeacherId(int teacherId)
         {
@@ -71,6 +70,13 @@ namespace TeamManagement.Controllers
             }
             return Ok("Successfully created");
         }
+        //[HttpPost("{teacherId}/Add-course")]
+        //public async Task<IActionResult> AddCoursesToTeacherAsync(int teacherId, CourseModel course)
+        //{
+        //    var add = await _teacherRepository.AddCoursesToTeacherAsync(teacherId, course.CourseIds);
+        //    if (!add) return BadRequest();
+        //    return Ok("Successfully added");   
+        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeacher(int id)

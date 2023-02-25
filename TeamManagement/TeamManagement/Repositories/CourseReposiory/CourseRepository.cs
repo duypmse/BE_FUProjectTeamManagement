@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Models;
+using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.CourseReposiory
 {
@@ -23,7 +24,7 @@ namespace TeamManagement.Repositories.CourseReposiory
 
         public async Task<List<CourseDTO>> GetAllCoursesAsync()
         {
-            var allCourse = await _context.Courses!.ToListAsync();
+            var allCourse = await _context.Courses.ToListAsync();
             return _mapper.Map<List<CourseDTO>>(allCourse);
         }
         public async Task<CourseDTO> GetCourseByIdAsync(int id)
@@ -36,18 +37,27 @@ namespace TeamManagement.Repositories.CourseReposiory
             var course = await _context.Courses.Where(c => c.CourseName == courseName).FirstOrDefaultAsync();
             return _mapper.Map<CourseDTO>(course);
         }
-        public async Task<bool> CreateCoursesAsync(CourseDTO courseDto)
+        public async Task<List<CourseDTO>> GetCoursesNotTaughtAsync()
         {
-            var newCourse = _mapper.Map<Course>(courseDto);
-            if ( courseDto != null)
-            {
-                newCourse.Status = 1;
-                await _context.Courses.AddAsync(newCourse);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;     
+            var isTeach = await _context.Courses.Where(c => !_context.TeacherCourses
+                                                .Any(tc => tc.CourseId == c.CourseId))
+                                                .ToListAsync();
+            return _mapper.Map<List<CourseDTO>>(isTeach);
         }
+
+        public async Task<bool> CreateCoursesAsync(TeacherCourseModel TCModel)
+        {           
+            var newCourse = _mapper.Map<Course>(TCModel);
+            var teacher = await _context.Teachers.FindAsync(TCModel.TeacherId);
+            if (newCourse == null || teacher == null) return false;
+            newCourse.Status = 1;
+            var teacherCourse = new TeacherCourse { TeacherId = TCModel.TeacherId, Course = newCourse };
+            await _context.TeacherCourses.AddAsync(teacherCourse);
+            await _context.Courses.AddAsync(newCourse);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task UpdateCoursesAsync(Course course)
         {
             var co = _context.Courses.SingleOrDefaultAsync(c => c.CourseId == course.CourseId);
@@ -85,7 +95,7 @@ namespace TeamManagement.Repositories.CourseReposiory
                                                .FirstOrDefaultAsync();
             var student = await _context.Students.Where(s => s.StuId == studentId).FirstOrDefaultAsync();
             var par = await _context.Participants.Where(p => p.StuId == studentId).FirstOrDefaultAsync();
-            if(course != null && student != null && par == null)
+            if (course != null && student != null && par == null)
             {
                 var newP = new Participant()
                 {
@@ -98,6 +108,26 @@ namespace TeamManagement.Repositories.CourseReposiory
                 return true;
             }
             return false;
+        }
+
+        public async Task<List<TeacherCourseModel>> GetlistCourseHaveTeacherAsync()
+        {
+            var result = from c in _context.Courses
+                         join tc in _context.TeacherCourses on c.CourseId equals tc.CourseId
+                         join t in _context.Teachers on tc.TeacherId equals t.TeacherId
+                         select new TeacherCourseModel
+                         {
+                             CourseId = c.CourseId,
+                             CourseName = c.CourseName,
+                             KeyEnroll = c.KeyEnroll,
+                             TeacherId = t.TeacherId,
+                             TeacherName= t.TeacherName,
+                             SubId = c.SubId,
+                             SemId = c.SemId,
+                             Status= c.Status
+                         };
+            var list =  await result.ToListAsync();
+            return _mapper.Map<List<TeacherCourseModel>>(list);
         }
     }
 }
