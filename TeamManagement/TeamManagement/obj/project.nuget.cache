@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Mo3j/J1K7mwygdGKnAQWe7claUmFMlUlFw9AVALidTNoDboJnbiHxj3UsBHDRJic7J3eTlIicYOMjzpGHCMgww==",
+  "dgSpecHash": "xFHl0u7cQdRTTZK6oUGRkftzchaYsOyNlELGqsijGyDqfA0aRGsepi5oY9D/pT86gKBYPyzh5YIaxkOh+KNtCQ==",
   "success": true,
   "projectFilePath": "E:\\Project\\C# Project\\TeamManagament\\TeamManagement\\TeamManagement\\TeamManagement.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\guuhi\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
+    "C:\\Users\\guuhi\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\guuhi\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
     "C:\\Users\\guuhi\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\guuhi\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

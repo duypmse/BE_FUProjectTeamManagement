@@ -36,7 +36,7 @@ namespace TeamManagement.Controllers
             }
             return Ok(listStudent);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> CreateATeamAsync(int courseId, TeamDTO teamDto)
         {
