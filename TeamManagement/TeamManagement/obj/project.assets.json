@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net6.0": {
-      "AutoMapper/12.0.0": {
+      "AutoMapper/12.0.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0"
@@ -1441,19 +1441,39 @@
             "rid": "win"
           }
         }
+      },
+      "TeamManagement.Repository/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "AutoMapper": "12.0.1",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.0",
+          "Google.Apis.Auth": "1.59.0",
+          "Microsoft.Data.SqlClient": "5.1.0",
+          "Microsoft.EntityFrameworkCore": "5.0.10",
+          "Microsoft.EntityFrameworkCore.SqlServer": "5.0.10",
+          "Microsoft.Extensions.Configuration.Json": "5.0.0",
+          "Swashbuckle.AspNetCore": "5.6.3"
+        },
+        "compile": {
+          "bin/placeholder/TeamManagement.Repository.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TeamManagement.Repository.dll": {}
+        }
       }
     }
   },
   "libraries": {
-    "AutoMapper/12.0.0": {
-      "sha512": "0Rmg0zI5AFu1O/y//o9VGyhxKjhggWpk9mOA1tp0DEVx40c61bs+lnQv+0jUq8XbniF7FKgIVvI1perqiMtLrA==",
+    "AutoMapper/12.0.1": {
+      "sha512": "hvV62vl6Hp/WfQ24yzo3Co9+OPl8wH8hApwVtgWpiAynVJkUcs7xvehnSftawL8Pe8FrPffBRM3hwzLQqWDNjA==",
       "type": "package",
-      "path": "automapper/12.0.0",
+      "path": "automapper/12.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
-        "automapper.12.0.0.nupkg.sha512",
+        "automapper.12.0.1.nupkg.sha512",
         "automapper.nuspec",
         "icon.png",
         "lib/netstandard2.1/AutoMapper.dll",
@@ -3663,6 +3683,11 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "TeamManagement.Repository/1.0.0": {
+      "type": "project",
+      "path": "../TeamManagement.Repository/TeamManagement.Repository.csproj",
+      "msbuildProject": "../TeamManagement.Repository/TeamManagement.Repository.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3679,7 +3704,8 @@
       "Microsoft.EntityFrameworkCore.SqlServer >= 5.0.10",
       "Microsoft.EntityFrameworkCore.Tools >= 5.0.10",
       "Microsoft.Extensions.Configuration.Json >= 5.0.0",
-      "Swashbuckle.AspNetCore >= 5.6.3"
+      "Swashbuckle.AspNetCore >= 5.6.3",
+      "TeamManagement.Repository >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -3712,7 +3738,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Sem7\\SWD392\\BE_FUProjectTeamManagement\\TeamManagement\\TeamManagement.Repository\\TeamManagement.Repository.csproj": {
+              "projectPath": "D:\\Sem7\\SWD392\\BE_FUProjectTeamManagement\\TeamManagement\\TeamManagement.Repository\\TeamManagement.Repository.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -3804,5 +3834,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file D:\\Sem7\\SWD392\\BE_FUProjectTeamManagement\\TeamManagement\\TeamManagement\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

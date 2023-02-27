@@ -158,3 +158,5 @@ E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\n
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Microsoft.AspNetCore.JsonPatch.dll
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\Newtonsoft.Json.Bson.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\TeamManagement.Repository.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\bin\Release\net6.0\TeamManagement.Repository.pdb

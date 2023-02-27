@@ -25,11 +25,14 @@ using TeamManagement.Helper;
 using TeamManagement.Models;
 using TeamManagement.Repositories.AdminRepository;
 using TeamManagement.Repositories.CourseReposiory;
+using TeamManagement.Repositories.DepartmentRepository;
 using TeamManagement.Repositories.LoginRepository;
 using TeamManagement.Repositories.SemesterRepository;
 using TeamManagement.Repositories.StudentRepository;
+using TeamManagement.Repositories.SubjectRepository;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repositories.TeamRepository;
+using TeamManagement.Repositories.TopicRepository;
 using static System.Net.WebRequestMethods;
 
 namespace TeamManagement
@@ -75,7 +78,9 @@ namespace TeamManagement
             services.AddScoped<ILoginRepository, LoginRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<ISemesterRepository, SemesterRepository>();
-
+            services.AddScoped<ITopicRepository, TopicRepository>();
+            services.AddScoped<ISubjectRepository, SubjectRepository>();
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
                 options.TokenValidationParameters = new TokenValidationParameters

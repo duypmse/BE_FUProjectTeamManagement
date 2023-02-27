@@ -27,13 +27,20 @@ namespace TeamManagement.Controllers
             }
             return Ok(listSemester);
         }
+        [HttpGet("{semesterId}")]
+        public async Task<IActionResult> GetSemesterByIdAsync(int semesterId)
+        {
+            var semester = await _semesterRepository.GetSemesterByIdAsync(semesterId); 
+            if (semester == null) return NotFound();
+            return Ok(semester);
+        }
         [HttpGet("semesterName")]
         public async Task<IActionResult> GetSemesterByNameAsync(string semesterName)
         {
             var semester = await _semesterRepository.GetSemesterByNameAsync(semesterName);
             if (semester == null)
             {
-                return NoContent();
+                return NotFound();
             }
             return Ok(semester);
         }

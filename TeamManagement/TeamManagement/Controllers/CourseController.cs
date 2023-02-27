@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Models;
 using TeamManagement.Repositories.CourseReposiory;
+using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Controllers
 {
@@ -38,31 +39,61 @@ namespace TeamManagement.Controllers
             return Ok(listTeam);
         }
 
-        [HttpGet("{courseId}/Student")]
+        [HttpGet("{courseId}/StudentNonTeam")]
         public async Task<IActionResult> GetListStudentByCourseId(int courseId)
         {
-            var listStudent = await _courseRepository.GetListStudentByCourseIdAsync(courseId);
+            var listStudent = await _courseRepository.GetListStudentNonTeamByCourseIdAsync(courseId);
             if (!listStudent.Any())
             {
                 return NoContent();
             }
             return Ok(listStudent); 
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateNewCourse(CourseDTO course)
+        [HttpGet("Course-have-Teacher")]
+        public async Task<IActionResult> GetlistCourseHaveTeacherAsync()
         {
-            var existingCourse = await _courseRepository.GetCourseByNameAsync(course.CourseName);
+            var list = await _courseRepository.GetlistCourseHaveTeacherAsync();
+            if (!list.Any())
+            {
+                return NoContent();
+            }
+            return Ok(list);
+        }
+        [HttpGet("Not-taught")]
+        public async Task<IActionResult> GetCoursesNotTaughtAsync()
+        {
+            var listCourse = await _courseRepository.GetCoursesNotTaughtAsync();
+            if (listCourse == null) return NoContent();
+            return Ok(listCourse);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateNewCourse(TeacherCourseModel TCModel)
+        {
+            var existingCourse = await _courseRepository.GetCourseByNameAsync(TCModel.CourseName);
             if (existingCourse != null)
             {
                 return BadRequest();
             }
             else
             {
-                await _courseRepository.CreateCoursesAsync(course);
-                return Ok();
+                var newCourse = await _courseRepository.CreateCoursesAsync(TCModel);
+                if(!newCourse)
+                {
+                    return BadRequest();
+                }
+                return Ok("Successfully created!");
             }
         }
-
+        [HttpPost("Join-course")]
+        public async Task<IActionResult> StudentJoinCourse(int courseId, string keyEnroll, int studentId)
+        {
+            var joining = await _courseRepository.StudentJoinCourse(courseId, keyEnroll, studentId);
+            if (!joining)
+            {
+                return BadRequest();
+            }
+            return Ok("Successfully joined");
+        }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteACourse(int id)
         {

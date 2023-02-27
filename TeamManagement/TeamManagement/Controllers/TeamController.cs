@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repositories.TeamRepository;
+using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Controllers
 {
@@ -24,6 +25,7 @@ namespace TeamManagement.Controllers
             var listTeam = await _teamRepository.GetAllTeamAsync();
             return Ok(listTeam);
         }
+
         [HttpGet("{teamId}/Student")]
         public async Task<IActionResult> GetListStudentByTeamId(int teamId)
         {
@@ -34,21 +36,47 @@ namespace TeamManagement.Controllers
             }
             return Ok(listStudent);
         }
+
         [HttpPost]
-        public async Task<IActionResult> CreateATeamAsync(TeamDTO teamDto)
+        public async Task<IActionResult> CreateATeamAsync(int courseId, TeamDTO teamDto)
         {
-            var newTeam = await _teamRepository.CreateATeamAsync(teamDto);
+            var newTeam = await _teamRepository.CreateATeamToCourseAsync(courseId, teamDto);
             if (!newTeam)
             {
                 return BadRequest("Name's team existing");
             }
             return Ok("Successfully created");
         }
-        [HttpPut]
-        public async Task<IActionResult> AddStudentToTeam(int teamId, int studentId)
+
+        [HttpPut("{teamId}/Add-Students")]
+        public async Task<IActionResult> AddStudentToTeam(int teamId, StudentModel studentModel)
         {
-            await _teamRepository.AddStudentToTeamAsync(teamId, studentId);
+            var addNew = await _teamRepository.AddStudentToTeamAsync(teamId, studentModel.studentIds);
+            if (!addNew)
+            {
+                return BadRequest("Student not found or not join course yet");
+            }
             return Ok("Add successful");
+        }
+        [HttpPut("{teamId}/Remove/{studentId}")]
+        public async Task<IActionResult> RemoveAStudentInTeam(int teamId, int studentId)
+        {
+            var remove = await _teamRepository.RemoveAStudentInTeamAsync(studentId, teamId);
+            if (!remove)
+            {
+                return BadRequest();
+            }
+            return Ok("Successfully removed!");
+        }
+        [HttpDelete("{teamId}")]
+        public async Task<IActionResult> RemoveATeam(int teamId)
+        {
+            var removeTeam = await _teamRepository.RemoveATeamAsync(teamId);
+            if (!removeTeam)
+            {
+                return BadRequest();
+            }
+            return Ok("Successfully removed!");
         }
     }
 }
