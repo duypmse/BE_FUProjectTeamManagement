@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Models;
+using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.TopicRepository
 {
@@ -23,17 +25,48 @@ namespace TeamManagement.Repositories.TopicRepository
             var listTopic = await _context.Topics.ToListAsync();
             return _mapper.Map<List<TopicDTO>>(listTopic);
         }
-        public async Task<bool> CreateATopicAsync(TopicDTO topicDTO)
+        public async Task<bool> CreateATopicAsync(int teamId, TopicDTO topicDTO)
         {
-            var topic = _mapper.Map<Topic>(topicDTO);
-            if(topic == null)
+            //var topic = _mapper.Map<Topic>(topicDTO);
+            //if(topic == null) return false;
+            var course = await _context.CourseTeams.Where(ct => ct.TeamId == teamId).Select(c => c.Course).FirstOrDefaultAsync();
+            if (topicDTO.TopicId != 0)
             {
-                return false;
+                var updateTopic = new Topic 
+                {
+                    TopicId = topicDTO.TopicId,
+                    TopicName = topicDTO.TopicName,
+                    CourseId = course.CourseId,
+                    Status = 1
+                };
+                _context.Update(updateTopic);
+                await _context.SaveChangesAsync();
+                return true;
             }
-            topic.Status = 1;
-            await _context.Topics.AddAsync(topic);
-            await _context.SaveChangesAsync();
-            return true;
+            if(topicDTO.TopicId == 0)
+            {
+                var isExisting = await _context.TeamTopics.Where(tt => tt.TeamId == teamId).Select(to => to.Topic).AnyAsync();
+                if (isExisting) return false;
+                var newTopic = new Topic
+                {
+                    TopicName = topicDTO.TopicName,
+                    CourseId = course.CourseId,
+                    Status = 1,
+                };
+                await _context.Topics.AddAsync(newTopic);
+                await _context.SaveChangesAsync();
+
+                var newTeamTopic = new TeamTopic
+                {
+                    TeamId = teamId,
+                    TopicId = newTopic.TopicId
+                };
+
+                await _context.AddAsync(newTeamTopic);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

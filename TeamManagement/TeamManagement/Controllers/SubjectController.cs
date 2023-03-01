@@ -40,5 +40,19 @@ namespace TeamManagement.Controllers
             }
             return Ok("Successfully created!");
         }
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateASubjectAsync(SubjectDTO subjectDTO)
+        {
+            var updateSubject = await _subjectRepository.UpdateASubjectAsync(subjectDTO);
+            if(!updateSubject) return BadRequest();
+            return Ok("Successfully updated!");
+        }
+        [HttpDelete("{subjectId}/Delete")]
+        public async Task<IActionResult> DeleteASubjectAsync(int subjectId)
+        {
+            var deleteSubject = await _subjectRepository.DeleteASubjectAsync(subjectId);
+            if(!deleteSubject) return BadRequest();
+            return Ok("Successfully deleted!");
+        }
     }
 }

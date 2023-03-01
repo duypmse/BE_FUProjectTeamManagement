@@ -63,4 +63,6 @@ E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\obj\Release\n
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\obj\Release\net6.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\obj\Release\net6.0\PubTmp\Out\TeamManagement.Repository.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\obj\Release\net6.0\PubTmp\Out\TeamManagement.Repository.pdb
 E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement\obj\Release\net6.0\PubTmp\Out\TeamManagement.deps.json

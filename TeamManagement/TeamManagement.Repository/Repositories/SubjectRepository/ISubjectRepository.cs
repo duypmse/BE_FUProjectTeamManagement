@@ -9,5 +9,7 @@ namespace TeamManagement.Repositories.SubjectRepository
         Task<List<SubjectDTO>> GetAllSubjectAsync();
         Task<SubjectDTO> GetSubjectByIdAsync(int subjectId);
         Task<bool> CreateASubjectAsync(SubjectDTO subjectDTO);
+        Task<bool> UpdateASubjectAsync(SubjectDTO subjectDTO);
+        Task<bool> DeleteASubjectAsync(int subjectId);
     }
 }
