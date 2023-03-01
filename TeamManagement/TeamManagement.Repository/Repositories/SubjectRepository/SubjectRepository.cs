@@ -35,7 +35,7 @@ namespace TeamManagement.Repositories.SubjectRepository
         {
             var sub = _mapper.Map<Subject>(subjectDTO);
             var existingSubject = await _context.Subjects.Where(s => s.SubName == subjectDTO.SubName).FirstOrDefaultAsync();
-            if(sub != null && existingSubject == null)
+            if (sub != null && existingSubject == null)
             {
                 sub.Status = 1;
                 await _context.AddAsync(sub);
@@ -43,6 +43,39 @@ namespace TeamManagement.Repositories.SubjectRepository
                 return true;
             }
             return false;
-        }      
+        }
+
+        public async Task<bool> UpdateASubjectAsync(SubjectDTO subjectDTO)
+        {
+            if (subjectDTO != null)
+            {
+                var updateSubject = _mapper.Map<Subject>(subjectDTO);
+                _context.Update(updateSubject);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteASubjectAsync(int subjectId)
+        {
+            var subject = await _context.Subjects.FindAsync(subjectId);
+            if (subject != null)
+            {
+                var isInCourse = await _context.Courses.Where(c => c.SubId == subjectId).ToListAsync();
+                if (isInCourse.Any())
+                {
+                    foreach (var c in isInCourse)
+                    {
+                        c.SubId = null;
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                _context.Remove(subject);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

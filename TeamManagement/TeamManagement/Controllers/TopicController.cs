@@ -24,9 +24,9 @@ namespace TeamManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateATopicAsync(TopicDTO topicDTO)
+        public async Task<IActionResult> CreateATopicAsync(int teamId, TopicDTO topicDTO)
         {
-            var newTopic = await _topicRepository.CreateATopicAsync(topicDTO);
+            var newTopic = await _topicRepository.CreateATopicAsync( teamId, topicDTO);
             if (!newTopic)
             {
                 return BadRequest();

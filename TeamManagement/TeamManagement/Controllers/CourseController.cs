@@ -28,6 +28,13 @@ namespace TeamManagement.Controllers
         {
             return Ok(await _courseRepository.GetAllCoursesAsync());
         }
+        [HttpGet("Active")]
+        public async Task<IActionResult> GetAllActiveCourseAsync()
+        {
+            var list = await _courseRepository.GetAllActiveCoursesAsync();
+            if (list == null) return NoContent();
+            return Ok(list);
+        }
         [HttpGet("{courseId}/Team")]
         public async Task<IActionResult> GetListTeamByCourseId(int courseId)
         {
@@ -59,13 +66,13 @@ namespace TeamManagement.Controllers
             }
             return Ok(list);
         }
-        [HttpGet("Not-taught")]
-        public async Task<IActionResult> GetCoursesNotTaughtAsync()
-        {
-            var listCourse = await _courseRepository.GetCoursesNotTaughtAsync();
-            if (listCourse == null) return NoContent();
-            return Ok(listCourse);
-        }
+        //[HttpGet("Not-taught")]
+        //public async Task<IActionResult> GetCoursesNotTaughtAsync()
+        //{
+        //    var listCourse = await _courseRepository.GetCoursesNotTaughtAsync();
+        //    if (listCourse == null) return NoContent();
+        //    return Ok(listCourse);
+        //}
         [HttpPost]
         public async Task<IActionResult> CreateNewCourse(TeacherCourseModel TCModel)
         {
@@ -94,19 +101,33 @@ namespace TeamManagement.Controllers
             }
             return Ok("Successfully joined");
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteACourse(int id)
+        [HttpPut("{courseId}/ChangeStatus")]
+        public async Task<IActionResult> ChangeCourseStatusAsync(int courseId)
         {
-            try
-            {
-                await _courseRepository.DeleteCoursesAsync(id);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var changeStatus = await _courseRepository.ChangeCourseStatusAsync(courseId);
+            if(!changeStatus) return BadRequest();
+            return Ok("Successfully change status!");
         }
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateCourseAsync(int teacherId, TeacherCourseModel TCModel)
+        {
+            var updateCourse = await _courseRepository.UpdateCourseAsync(teacherId, TCModel);
+            if(!updateCourse) return BadRequest();
+            return Ok("Successfully updated!");
+        }
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteACourse(int id)
+        //{
+        //    try
+        //    {
+        //        await _courseRepository.DeleteCoursesAsync(id);
+        //        return Ok();
+        //    }
+        //    catch
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
     }
 }

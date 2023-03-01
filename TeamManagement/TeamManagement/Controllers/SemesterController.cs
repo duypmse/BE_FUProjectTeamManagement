@@ -54,5 +54,19 @@ namespace TeamManagement.Controllers
             }
             return Ok("Successfully created");
         }
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateASemesterAsync(SemesterDTO semesterDTO)
+        {
+            var updateSemester = await _semesterRepository.UpdateASemesterAsync(semesterDTO);
+            if (!updateSemester) return BadRequest();
+            return Ok("Successfully updated");
+        }
+        [HttpDelete("{semesterId}/Delete")]
+        public async Task<IActionResult> DeleteASemester(int semesterId)
+        {
+            var deleteSemester = await _semesterRepository.DeleteSemesterAsync(semesterId);
+            if (!deleteSemester) return BadRequest();
+            return Ok("Succesfully deleted!");
+        }
     }
 }

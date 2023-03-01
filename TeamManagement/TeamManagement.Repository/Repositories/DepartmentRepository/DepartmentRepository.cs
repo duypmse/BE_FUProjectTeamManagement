@@ -37,5 +37,44 @@ namespace TeamManagement.Repositories.DepartmentRepository
             }
             return false;
         }
+
+        public async Task<DepartmentDTO> GetADepartmentByIdAsync(int departmentId)
+        {
+            var department = await _context.Departments.FindAsync(departmentId);
+            return _mapper.Map<DepartmentDTO>(department);  
+        }
+
+        public async Task<bool> UpdateADepartmentAsync(DepartmentDTO DepartmentDTO)
+        {
+            if (DepartmentDTO != null) 
+            {
+                var updateDep = _mapper.Map<Department>(DepartmentDTO);
+                _context.Update(updateDep);
+                await _context.SaveChangesAsync();  
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteADepartmentAsync(int departmentId)
+        {
+            var dep = await _context.Departments.FindAsync(departmentId);
+            if(dep != null)
+            {
+                var isInSubject = await _context.Subjects.Where(s => s.DeptId == dep.DeptId).ToListAsync();
+                if (isInSubject.Any())
+                {
+                    foreach(var i in isInSubject)
+                    {
+                        i.DeptId = null;
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                _context.Remove(dep);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

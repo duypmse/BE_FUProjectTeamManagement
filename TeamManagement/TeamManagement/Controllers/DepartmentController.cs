@@ -23,7 +23,14 @@ namespace TeamManagement.Controllers
             var listDepartment = await _departmentRepository.GetAllDepartmentAsync();
             return Ok(listDepartment);
         }
-
+        [HttpGet("{depId}")]
+        public async Task<IActionResult> GetDepartmentByIdAsync(int depId)
+        {
+            var dep = await _departmentRepository.GetADepartmentByIdAsync(depId);
+            if (dep == null) return NoContent();
+            return Ok(dep);
+        }
+        
         [HttpPost]
         public async Task<IActionResult> CreateADepartment(DepartmentDTO departmentDTO)
         {
@@ -33,6 +40,20 @@ namespace TeamManagement.Controllers
                 return BadRequest();
             }
             return Ok("Successfully created!");
+        }
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateADepartmentAsync(DepartmentDTO departmentDTO)
+        {
+            var updateDep = await _departmentRepository.UpdateADepartmentAsync(departmentDTO);
+            if(!updateDep) return BadRequest();
+            return Ok("Successfully updated!");
+        }
+        [HttpDelete("{depId}")]
+        public async Task<IActionResult> DeleteADepartmentAsync(int depId)
+        {
+            var deleteDep = await _departmentRepository.DeleteADepartmentAsync(depId);
+            if(!deleteDep) return BadRequest();
+            return Ok("Successfully deleted!");
         }
     }
 }

@@ -27,6 +27,11 @@ namespace TeamManagement.Repositories.CourseReposiory
             var allCourse = await _context.Courses.ToListAsync();
             return _mapper.Map<List<CourseDTO>>(allCourse);
         }
+        public async Task<List<CourseDTO>> GetAllActiveCoursesAsync()
+        {
+            var allCourse = await _context.Courses.Where(c => c.Status == 1).ToListAsync();
+            return _mapper.Map<List<CourseDTO>>(allCourse);
+        }
         public async Task<CourseDTO> GetCourseByIdAsync(int id)
         {
             var course = await _context.Courses.Where(c => c.CourseId == id).FirstOrDefaultAsync();
@@ -37,16 +42,16 @@ namespace TeamManagement.Repositories.CourseReposiory
             var course = await _context.Courses.Where(c => c.CourseName == courseName).FirstOrDefaultAsync();
             return _mapper.Map<CourseDTO>(course);
         }
-        public async Task<List<CourseDTO>> GetCoursesNotTaughtAsync()
-        {
-            var isTeach = await _context.Courses.Where(c => !_context.TeacherCourses
-                                                .Any(tc => tc.CourseId == c.CourseId))
-                                                .ToListAsync();
-            return _mapper.Map<List<CourseDTO>>(isTeach);
-        }
+        //public async Task<List<CourseDTO>> GetCoursesNotTaughtAsync()
+        //{
+        //    var isTeach = await _context.Courses.Where(c => !_context.TeacherCourses
+        //                                        .Any(tc => tc.CourseId == c.CourseId))
+        //                                        .ToListAsync();
+        //    return _mapper.Map<List<CourseDTO>>(isTeach);
+        //}
 
         public async Task<bool> CreateCoursesAsync(TeacherCourseModel TCModel)
-        {           
+        {
             var newCourse = _mapper.Map<Course>(TCModel);
             var teacher = await _context.Teachers.FindAsync(TCModel.TeacherId);
             if (newCourse == null || teacher == null) return false;
@@ -58,22 +63,45 @@ namespace TeamManagement.Repositories.CourseReposiory
             return true;
         }
 
-        public async Task UpdateCoursesAsync(Course course)
+        public async Task<bool> UpdateCourseAsync(int teacherId, TeacherCourseModel TCModel)
         {
-            var co = _context.Courses.SingleOrDefaultAsync(c => c.CourseId == course.CourseId);
-            if (co != null)
+            if (TCModel.CourseId == 0) return false;
+            var co = _mapper.Map<Course>(TCModel);
+            _context.Courses.Update(co);
+            await _context.SaveChangesAsync();
+
+            if(teacherId != TCModel.TeacherId)
             {
-                _context.Courses.Update(course);
+                var teacherCourse = await _context.TeacherCourses
+                    .Where(tc => tc.TeacherId == teacherId && tc.CourseId == TCModel.CourseId)
+                    .FirstOrDefaultAsync();
+                _context.TeacherCourses.Remove(teacherCourse);
+
+                var newTeacherCourse = new TeacherCourse
+                {
+                    TeacherId = TCModel.TeacherId,
+                    CourseId = TCModel.CourseId,
+                };
+                _context.Add(newTeacherCourse);
                 await _context.SaveChangesAsync();
             }
+            return true;
         }
-        public async Task DeleteCoursesAsync(int id)
+        public async Task<bool> ChangeCourseStatusAsync(int courseId)
         {
-            var co = _context.Courses.Where(c => c.CourseId == id).FirstOrDefault();
-            if (co != null)
+            var co = await _context.Courses.Where(c => c.CourseId == courseId).FirstOrDefaultAsync();
+            if (co == null) return false;
+            if (co.Status == 1)
             {
-                _context.Courses.Remove(co);
+                co.Status = 0;
                 await _context.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                co.Status = 1;
+                await _context.SaveChangesAsync();
+                return true;
             }
         }
 
@@ -106,7 +134,7 @@ namespace TeamManagement.Repositories.CourseReposiory
             var course = await _context.Courses.Where(c => c.CourseId == courseId && c.KeyEnroll == keyEnroll)
                                                .FirstOrDefaultAsync();
             var student = await _context.Students.Where(s => s.StuId == studentId).FirstOrDefaultAsync();
-            var par = await _context.Participants.Where(p => p.StuId == studentId).FirstOrDefaultAsync();
+            var par = await _context.Participants.Where(p => p.StuId == studentId && p.CourseId == courseId).FirstOrDefaultAsync();
             if (course != null && student != null && par == null)
             {
                 var newP = new Participant()
@@ -133,12 +161,12 @@ namespace TeamManagement.Repositories.CourseReposiory
                              CourseName = c.CourseName,
                              KeyEnroll = c.KeyEnroll,
                              TeacherId = t.TeacherId,
-                             TeacherName= t.TeacherName,
+                             TeacherName = t.TeacherName,
                              SubId = c.SubId,
                              SemId = c.SemId,
-                             Status= c.Status
+                             Status = c.Status
                          };
-            var list =  await result.ToListAsync();
+            var list = await result.ToListAsync();
             return _mapper.Map<List<TeacherCourseModel>>(list);
         }
     }

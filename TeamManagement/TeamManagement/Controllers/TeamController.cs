@@ -36,7 +36,13 @@ namespace TeamManagement.Controllers
             }
             return Ok(listStudent);
         }
-
+        [HttpGet("{teamId}/Get-a-topic")]
+        public async Task<IActionResult> GetATopicByTeamIdAsync(int teamId)
+        {
+            var topic = await _teamRepository.GetATopicByTeamIdAsync(teamId);
+            if(topic == null) return NoContent();
+            return Ok(topic);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateATeamAsync(int courseId, TeamDTO teamDto)
         {
@@ -67,6 +73,13 @@ namespace TeamManagement.Controllers
                 return BadRequest();
             }
             return Ok("Successfully removed!");
+        }
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateATeamAsync(TeamDTO teamDTO)
+        {
+            var upTeam = await _teamRepository.UpdateATeamAsync(teamDTO);
+            if (!upTeam) return BadRequest();
+            return Ok("Successfully updated!");
         }
         [HttpDelete("{teamId}")]
         public async Task<IActionResult> RemoveATeam(int teamId)
