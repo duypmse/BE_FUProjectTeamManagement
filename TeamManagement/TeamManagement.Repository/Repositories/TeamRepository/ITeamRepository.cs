@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
+using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.TeamRepository
@@ -10,6 +11,7 @@ namespace TeamManagement.Repositories.TeamRepository
         Task<List<TeamDTO>> GetAllTeamAsync();
         Task<List<StudentDTO>> GetListStudentByTeamIdAsync(int teamId);
         Task<TopicDTO> GetATopicByTeamIdAsync(int teamId);
+        Task<TeamDetailModel?> GetTeamDetailByIdAsync(int teamId);
         Task<bool> AddStudentToTeamAsync(int teamId, List<int> studentIds);
         Task<bool> CreateATeamToCourseAsync(int courseId, TeamDTO teamDto);
         Task<bool> UpdateATeamAsync(TeamDTO teamDTO);

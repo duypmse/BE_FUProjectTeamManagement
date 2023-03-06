@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Models;
+using TeamManagement.Repository.Models;
 
 namespace TeamManagement.Repositories.AdminRepository
 {

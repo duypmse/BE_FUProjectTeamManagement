@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace TeamManagement.Models
+namespace TeamManagement.Repository.Models
 {
     public partial class Course
     {
@@ -16,6 +16,7 @@ namespace TeamManagement.Models
         }
 
         public int CourseId { get; set; }
+        public string Image { get; set; }
         public string CourseName { get; set; }
         public string KeyEnroll { get; set; }
         public int? SubId { get; set; }

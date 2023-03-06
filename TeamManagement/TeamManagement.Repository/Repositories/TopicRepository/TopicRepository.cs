@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Models;
+using TeamManagement.Repository.Models;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.TopicRepository
@@ -37,6 +37,8 @@ namespace TeamManagement.Repositories.TopicRepository
                     TopicId = topicDTO.TopicId,
                     TopicName = topicDTO.TopicName,
                     CourseId = course.CourseId,
+                    DeadlineDate = topicDTO.DeadlineDate,
+                    Requirement = topicDTO.Requirement,
                     Status = 1
                 };
                 _context.Update(updateTopic);
@@ -51,6 +53,8 @@ namespace TeamManagement.Repositories.TopicRepository
                 {
                     TopicName = topicDTO.TopicName,
                     CourseId = course.CourseId,
+                    DeadlineDate = topicDTO.DeadlineDate,
+                    Requirement = topicDTO.Requirement,
                     Status = 1,
                 };
                 await _context.Topics.AddAsync(newTopic);
@@ -67,6 +71,12 @@ namespace TeamManagement.Repositories.TopicRepository
                 return true;
             }
             return false;
+        }
+
+        public async Task<TopicDTO> GetTopicByIdAsync(int topicId)
+        {
+            var topic = await _context.Topics.FindAsync(topicId);
+            return _mapper.Map<TopicDTO>(topic);
         }
     }
 }

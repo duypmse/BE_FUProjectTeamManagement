@@ -1,0 +1,14 @@
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\TeamManagement.Repository.csproj.AssemblyReference.cache
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\TeamManagement.Repository.GeneratedMSBuildEditorConfig.editorconfig
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\TeamManagement.Repository.AssemblyInfoInputs.cache
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\TeamManagement.Repository.AssemblyInfo.cs
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\TeamManagement.Repository.csproj.CoreCompileInputs.cache
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\bin\Debug\net6.0\TeamManagement.Repository.deps.json
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\bin\Debug\net6.0\TeamManagement.Repository.runtimeconfig.json
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\bin\Debug\net6.0\TeamManagement.Repository.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\bin\Debug\net6.0\TeamManagement.Repository.pdb
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\TeamManagement.Repository.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\refint\TeamManagement.Repository.dll
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\TeamManagement.Repository.pdb
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\TeamManagement.Repository.genruntimeconfig.cache
+E:\Project\C# Project\TeamManagament\TeamManagement\TeamManagement.Repository\obj\Debug\net6.0\ref\TeamManagement.Repository.dll

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace TeamManagement.Models
+namespace TeamManagement.Repository.Models
 {
     public partial class FUProjectTeamManagementContext : DbContext
     {
@@ -66,6 +66,10 @@ namespace TeamManagement.Models
                 entity.Property(e => e.CourseName)
                     .IsRequired()
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Image)
+                    .HasMaxLength(2000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.KeyEnroll)
@@ -308,6 +312,10 @@ namespace TeamManagement.Models
             modelBuilder.Entity<Topic>(entity =>
             {
                 entity.ToTable("Topic");
+
+                entity.Property(e => e.DeadlineDate).HasColumnType("date");
+
+                entity.Property(e => e.Requirement).HasMaxLength(4000);
 
                 entity.Property(e => e.TopicName)
                     .IsRequired()

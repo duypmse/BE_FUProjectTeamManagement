@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System;
-using TeamManagement.Models;
 using TeamManagement.Repositories.AdminRepository;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repositories.LoginRepository;
@@ -33,9 +32,9 @@ namespace TeamManagement.Controllers
             var loginUser = await _loginRepository.LoginAsync(email.Email);
             if (loginUser == null)
             {
-                return NotFound();
+                return BadRequest();
             }
-            return  Ok(loginUser);
+            return Ok(loginUser);
         }
     }
 }

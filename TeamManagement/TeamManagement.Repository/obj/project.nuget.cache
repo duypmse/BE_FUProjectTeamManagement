@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "gEEAKpLCtFMi1cKSW8gLpAl1UQA0ocRIpzAFjkOYU8gSbW3DZ0cVAzMBQbfGVBJ1zAtUaWKfGb4U3B2EquHfVQ==",
+  "dgSpecHash": "MdLnhRCsnPi0QBeo9KrzfuWpN3wHcFTWawVLjNK9JmhiBFJDsvmhkMUvA/0k1zQQ4hdVMXIe9Hv8YNsWSVTYpQ==",
   "success": true,
   "projectFilePath": "E:\\Project\\C# Project\\TeamManagament\\TeamManagement\\TeamManagement.Repository\\TeamManagement.Repository.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,9 @@
     "C:\\Users\\guuhi\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
     "C:\\Users\\guuhi\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\guuhi\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\guuhi\\.nuget\\packages\\firebaseadmin\\2.3.0\\firebaseadmin.2.3.0.nupkg.sha512",
+    "C:\\Users\\guuhi\\.nuget\\packages\\google.api.gax\\3.2.0\\google.api.gax.3.2.0.nupkg.sha512",
+    "C:\\Users\\guuhi\\.nuget\\packages\\google.api.gax.rest\\3.2.0\\google.api.gax.rest.3.2.0.nupkg.sha512",
     "C:\\Users\\guuhi\\.nuget\\packages\\google.apis\\1.59.0\\google.apis.1.59.0.nupkg.sha512",
     "C:\\Users\\guuhi\\.nuget\\packages\\google.apis.auth\\1.59.0\\google.apis.auth.1.59.0.nupkg.sha512",
     "C:\\Users\\guuhi\\.nuget\\packages\\google.apis.core\\1.59.0\\google.apis.core.1.59.0.nupkg.sha512",

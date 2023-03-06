@@ -7,11 +7,11 @@ using System.Text;
 using System;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Models;
 using TeamManagement.Repositories.AdminRepository;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repositories.StudentRepository;
 using System.Data;
+using TeamManagement.Repository.Models;
 
 namespace TeamManagement.Repositories.LoginRepository
 {
@@ -51,7 +51,7 @@ namespace TeamManagement.Repositories.LoginRepository
                         issuer: _config["JWT:Issuer"],
                         audience: _config["JWT:Audience"],
                         claims: claims,
-                        expires: DateTime.UtcNow.AddMinutes(30),
+                        expires: DateTime.UtcNow.AddDays(20),
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])), SecurityAlgorithms.HmacSha256)
                     );
                     return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), admin, role, status = 200});
@@ -68,7 +68,7 @@ namespace TeamManagement.Repositories.LoginRepository
                         issuer: _config["JWT:Issuer"],
                         audience: _config["JWT:Audience"],
                         claims: claims,
-                        expires: DateTime.UtcNow.AddMinutes(30),
+                        expires: DateTime.UtcNow.AddDays(20),
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])), SecurityAlgorithms.HmacSha256)
                     );
                     return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), teacher, role, status = 200});
@@ -85,7 +85,7 @@ namespace TeamManagement.Repositories.LoginRepository
                         issuer: _config["JWT:Issuer"],
                         audience: _config["JWT:Audience"],
                         claims: claims,
-                        expires: DateTime.UtcNow.AddMinutes(30),
+                        expires: DateTime.UtcNow.AddDays(20),
                         signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])), SecurityAlgorithms.HmacSha256)
                     );
                     return Task.FromResult(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken), student, role, status = 200});
