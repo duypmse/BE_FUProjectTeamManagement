@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Models;
+using TeamManagement.Repository.Models;
+using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.TeamRepository
@@ -32,18 +33,41 @@ namespace TeamManagement.Repositories.TeamRepository
             var listStudent = await _context.Participants.Where(t => t.TeamId == teamId).Select(s => s.Stu).ToListAsync();
             return _mapper.Map<List<StudentDTO>>(listStudent);
         }
+        public async Task<TeamDetailModel?> GetTeamDetailByIdAsync(int teamId)
+        {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.TeamId == teamId);
+            if (team == null) return null;
+            var teamTopic = await _context.TeamTopics.Where(tt => tt.TeamId == teamId).Select(tp => tp.Topic).FirstOrDefaultAsync();
+            var listStudent = await _context.Participants
+                                    .Where(p => p.TeamId == teamId)
+                                    .Select(p => p.Stu)
+                                    .ToListAsync();
+            if (listStudent == null) return null;
+            var teamDetail = new TeamDetailModel
+            {
+                TeamName = team?.TeamName,
+                TeamCount = listStudent.Count,
+                Students = _mapper.Map<List<StudentDTO>>(listStudent),
+                TopicName = teamTopic?.TopicName,
+                DeadlineDate = teamTopic?.DeadlineDate,
+                Requirement = teamTopic?.Requirement
+            };
+
+            return teamDetail;
+        }
         public async Task<TopicDTO> GetATopicByTeamIdAsync(int teamId)
         {
             var topic = await _context.TeamTopics.Where(te => te.TeamId == teamId).Select(to => to.Topic).SingleOrDefaultAsync();
-            return _mapper.Map<TopicDTO>(topic);
+            return _mapper.Map<TopicDTO>(topic);        
         }
 
         public async Task<bool> AddStudentToTeamAsync(int teamId, List<int> studentIds)
         {
             var team = await _context.Teams.FindAsync(teamId);
-            if (team == null) return false;
+            var teamCourse = await _context.CourseTeams.Where(ct => ct.TeamId == teamId).Select(c => c.Course).SingleOrDefaultAsync();
+            if (team == null || teamCourse == null) return false;
             var participants = await _context.Participants.Where(p => studentIds
-                                                          .Contains((int)p.StuId) && p.CourseId != null && p.TeamId == null)
+                                                          .Contains((int)p.StuId) && p.CourseId == teamCourse.CourseId && p.TeamId == null)
                                                           .ToListAsync();
             if (participants == null) return false;
             foreach (var p in participants)

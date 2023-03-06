@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using System.Runtime.Intrinsics.Arm;
 using TeamManagement.DTO;
-using TeamManagement.Models;
+using TeamManagement.Repository.Models;
+using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Helper

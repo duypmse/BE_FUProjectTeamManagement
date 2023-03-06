@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Models;
+using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.CourseReposiory
@@ -17,8 +17,7 @@ namespace TeamManagement.Repositories.CourseReposiory
         Task<List<StudentDTO>> GetListStudentNonTeamByCourseIdAsync(int courseId);
         //Task<List<CourseDTO>> GetCoursesNotTaughtAsync();
         Task<bool> CreateCoursesAsync(TeacherCourseModel TCModel);
-        Task<bool> StudentJoinCourse(int courseId, string keyEnroll, int studentId);
-        Task<bool> UpdateCourseAsync(int teacherId, TeacherCourseModel TCModel);
+        Task<bool> UpdateCourseAsync(int courseId, TeacherCourseModel TCModel);
         Task<bool> ChangeCourseStatusAsync(int courseId);
     }
 }

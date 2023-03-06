@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Models;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.RequestBodyModel;
 
@@ -49,6 +48,8 @@ namespace TeamManagement.Controllers
             if (teacher == null) return NoContent();
             return Ok(teacher);
         }
+
+        [Authorize(Roles = "teacher")]
         [HttpGet("{teacherId}/Course")]
         public async Task<ActionResult> GetListCourseByTeacherId(int teacherId)
         {
@@ -68,7 +69,7 @@ namespace TeamManagement.Controllers
             {
                 return BadRequest();
             }
-            return Ok("Successfully created");
+            return Ok("Successfully created!");
         }
         //[HttpPost("{teacherId}/Add-course")]
         //public async Task<IActionResult> AddCoursesToTeacherAsync(int teacherId, CourseModel course)
@@ -77,19 +78,20 @@ namespace TeamManagement.Controllers
         //    if (!add) return BadRequest();
         //    return Ok("Successfully added");   
         //}
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTeacher(int id)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateATeacherAsync(TeacherDTO teacherDTO)
         {
-            try
-            {
-                await _teacherRepository.DeleteTeacherAsync(id);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var updateTeacher = await _teacherRepository.UpdateTeacherAsync(teacherDTO);
+            if (!updateTeacher) return BadRequest();
+            return Ok("Successfully updated!");
+        }
+
+        [HttpDelete("{teacherId}")]
+        public async Task<IActionResult> DeleteTeacherAsync(int teacherId)
+        {
+            var deleteTeacher = await _teacherRepository.DeleteTeacherAsync(teacherId);
+            if(!deleteTeacher) return BadRequest();
+            return Ok("Successfully deleted!");
         }
     }
 }

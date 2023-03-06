@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace TeamManagement.Models
+namespace TeamManagement.Repository.Models
 {
     public partial class Team
     {

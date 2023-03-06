@@ -22,7 +22,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamManagement.Configurations;
 using TeamManagement.Helper;
-using TeamManagement.Models;
 using TeamManagement.Repositories.AdminRepository;
 using TeamManagement.Repositories.CourseReposiory;
 using TeamManagement.Repositories.DepartmentRepository;
@@ -33,6 +32,7 @@ using TeamManagement.Repositories.SubjectRepository;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repositories.TeamRepository;
 using TeamManagement.Repositories.TopicRepository;
+using TeamManagement.Repository.Models;
 using static System.Net.WebRequestMethods;
 
 namespace TeamManagement
@@ -59,7 +59,7 @@ namespace TeamManagement
                 options.AddPolicy("apiCorsPolicy", builder =>
                 {
                     builder.WithOrigins("http://localhost:5001", "https://cosmic-starship-a97dc2.netlify.app", 
-                        "http://localhost:3000")
+                        "http://localhost:3000", "https://sensational-crostata-e9cdd0.netlify.app")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials(); 

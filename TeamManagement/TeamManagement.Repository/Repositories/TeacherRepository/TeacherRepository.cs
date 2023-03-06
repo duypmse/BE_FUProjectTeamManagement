@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Models;
+using TeamManagement.Repository.Models;
+//using TeamManagement.Models;
 
 namespace TeamManagement.Repositories.TeacherRepository
 {
@@ -57,24 +58,43 @@ namespace TeamManagement.Repositories.TeacherRepository
             return false;
         }
 
-        public async Task UpdateTeacherAsync(Teacher teacher)
+        public async Task<bool> UpdateTeacherAsync(TeacherDTO teacherDTO)
         {
-            var te = _context.Teachers.SingleOrDefaultAsync(t => t.TeacherId == teacher.TeacherId);
-            if (te != null)
+            if (teacherDTO != null)
             {
-                _context.Teachers.Update(teacher);
+                var updateTeacher = _mapper.Map<Teacher>(teacherDTO);
+                _context.Teachers.Update(updateTeacher);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
-        public async Task DeleteTeacherAsync(int id)
+        public async Task<bool> DeleteTeacherAsync(int teacherId)
         {
-            var te = _context.Teachers.Where(t => t.TeacherId == id).FirstOrDefault();
+            var te = await _context.Teachers.FindAsync(teacherId);
+            var teacherTeam = await _context.TeacherTeams.Where(tt => tt.TeacherId == teacherId).ToListAsync();
+            var teacherTopic = await _context.TeacherTopics.Where(ttp => ttp.TeacherId == teacherId).ToListAsync();
+            var teacherCourse = await _context.TeacherCourses.Where(tc => tc.TeacherId == teacherId).ToListAsync();
             if (te != null)
             {
+                if(teacherCourse != null)
+                {
+                    _context.TeacherCourses.RemoveRange(teacherCourse);
+                }
+                if(teacherTopic != null)
+                {
+                    _context.TeacherTopics.RemoveRange(teacherTopic);
+                }
+                if (teacherTeam != null)
+                {
+                    _context.TeacherTeams.RemoveRange(teacherTeam);
+                }
                 _context.Teachers.Remove(te);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
         public async Task<List<CourseDTO>> GetListCourseByTeacherIdAsync(int teacherId)

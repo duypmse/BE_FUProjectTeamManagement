@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace TeamManagement.Models
+namespace TeamManagement.Repository.Models
 {
     public partial class Topic
     {
@@ -16,6 +16,8 @@ namespace TeamManagement.Models
         public int TopicId { get; set; }
         public string TopicName { get; set; }
         public int? CourseId { get; set; }
+        public DateTime? DeadlineDate { get; set; }
+        public string Requirement { get; set; }
         public int? Status { get; set; }
 
         public virtual Course Course { get; set; }

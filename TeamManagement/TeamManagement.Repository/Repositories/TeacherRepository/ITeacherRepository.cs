@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Models;
 
 namespace TeamManagement.Repositories.TeacherRepository
 {
@@ -14,7 +13,7 @@ namespace TeamManagement.Repositories.TeacherRepository
         Task<List<CourseDTO>> GetListCourseByTeacherIdAsync(int teacherId);
         Task<bool> CreateTeacherAsync(TeacherDTO teacher);
         //Task<bool> AddCoursesToTeacherAsync(int teacherId, List<int> courseIds);
-        Task UpdateTeacherAsync(Teacher teacher);
-        Task DeleteTeacherAsync(int id);
+        Task<bool> UpdateTeacherAsync(TeacherDTO teacherDTO);
+        Task<bool> DeleteTeacherAsync(int teacherId);
     }
 }

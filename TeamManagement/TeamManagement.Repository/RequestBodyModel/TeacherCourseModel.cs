@@ -3,6 +3,7 @@
     public class TeacherCourseModel
     {
         public int CourseId { get; set; }
+        public string? Image { get; set; }
         public string? CourseName { get; set; }
         public string? KeyEnroll { get; set; }
         public int TeacherId { get; set; }

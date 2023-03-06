@@ -36,6 +36,12 @@ namespace TeamManagement.Controllers
             }
             return Ok(listStudent);
         }
+        [HttpGet("{teamId}/Details")]
+        public async Task<IActionResult> GetTeamDetailByIdAsync(int teamId)
+        {
+            var teamDetail = await _teamRepository.GetTeamDetailByIdAsync(teamId);
+            return (teamDetail == null) ? NoContent() : Ok(teamDetail);
+        }
         [HttpGet("{teamId}/Get-a-topic")]
         public async Task<IActionResult> GetATopicByTeamIdAsync(int teamId)
         {

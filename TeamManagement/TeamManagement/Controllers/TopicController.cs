@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repositories.TopicRepository;
@@ -23,6 +24,13 @@ namespace TeamManagement.Controllers
             return Ok(listTopic);
         }
 
+        [HttpGet("{topicId}")]
+        public async Task<IActionResult> GetTopicByIdAsyc(int topicId)
+        {
+            var topic = await _topicRepository.GetTopicByIdAsync(topicId);
+            return (topic == null) ? BadRequest() : Ok(topic);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateATopicAsync(int teamId, TopicDTO topicDTO)
         {
@@ -33,5 +41,6 @@ namespace TeamManagement.Controllers
             }
             return Ok("Successfully created!");
         }
+        
     }
 }
