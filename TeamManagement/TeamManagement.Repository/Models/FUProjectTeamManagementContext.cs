@@ -21,6 +21,7 @@ namespace TeamManagement.Repository.Models
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<CourseTeam> CourseTeams { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Participant> Participants { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<Student> Students { get; set; }
@@ -37,8 +38,9 @@ namespace TeamManagement.Repository.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("server =(local); database = FUProjectTeamManagement;uid=sa;pwd=1;TrustServerCertificate=True;");
-                //optionsBuilder.UseSqlServer("Server=tcp:fu-project-team1.database.windows.net,1433;Initial Catalog=DBProjectTeamManagement;Persist Security Info=False;User ID=swd392;Password=Spring@2023;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                //optionsBuilder.UseSqlServer("server =(local); database = FUProjectTeamManagement;uid=sa;pwd=1;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer("Server=tcp:fu-project-team1.database.windows.net,1433;Initial Catalog=DBProjectTeamManagement;Persist Security Info=False;User ID=swd392;Password=Spring@2023;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+
             }
         }
 
@@ -119,6 +121,31 @@ namespace TeamManagement.Repository.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.ToTable("Notification");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.FileNoti)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.HasOne(d => d.Course)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.CourseId)
+                    .HasConstraintName("FK__Notificat__Cours__503BEA1C");
+
+                entity.HasOne(d => d.Teacher)
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(d => d.TeacherId)
+                    .HasConstraintName("FK__Notificat__Teach__4F47C5E3");
             });
 
             modelBuilder.Entity<Participant>(entity =>

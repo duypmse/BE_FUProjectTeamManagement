@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
 using TeamManagement.Repository.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.CourseModel;
 using TeamManagement.RequestBodyModel;
-//using TeamManagement.Models;
 
 namespace TeamManagement.Repositories.StudentRepository
 {
@@ -18,7 +18,7 @@ namespace TeamManagement.Repositories.StudentRepository
         public StudentRepository(FUProjectTeamManagementContext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;
+            _mapper = mapper;   
         }
         public async Task<List<StudentDTO>> GetAllStudent()
         {
@@ -40,8 +40,7 @@ namespace TeamManagement.Repositories.StudentRepository
 
         public async Task<List<TeamCourseModel>> GetListTeamByStudentAsync(int studentId)
         {
-            var listTeam = await (from st in _context.Students
-                                  join p in _context.Participants on st.StuId equals p.StuId
+            var listTeam = await (from p in _context.Participants
                                   join t in _context.Teams on p.TeamId equals t.TeamId
                                   join c in _context.Courses on p.CourseId equals c.CourseId
                                   join tpt in _context.TeamTopics on t.TeamId equals tpt.TeamId
@@ -146,7 +145,7 @@ namespace TeamManagement.Repositories.StudentRepository
                           where c.Status == 1
                           select new ActiveCourseModel
                           {
-                              CourseId = c.CourseId,   
+                              CourseId = c.CourseId,
                               Image = c.Image,
                               CourseName = c.CourseName,
                               TeacherName = t.TeacherName,

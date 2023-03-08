@@ -20,8 +20,6 @@ namespace TeamManagement.Helper
             CreateMap<Topic, TopicDTO>().ReverseMap();
             CreateMap<Subject, SubjectDTO>().ReverseMap();
             CreateMap<Department, DepartmentDTO>().ReverseMap();
-            CreateMap<Course, TeacherCourseModel>().ReverseMap();
-            CreateMap<TeacherCourse, TeacherCourseModel>().ReverseMap();
         }
     }
 }

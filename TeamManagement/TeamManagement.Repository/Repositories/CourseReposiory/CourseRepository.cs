@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
-using TeamManagement.Repository.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.CourseModel;
 //using TeamManagement.Models;
 using TeamManagement.RequestBodyModel;
 
@@ -53,44 +53,67 @@ namespace TeamManagement.Repositories.CourseReposiory
         //    return _mapper.Map<List<CourseDTO>>(isTeach);
         //}
 
-        public async Task<bool> CreateCoursesAsync(TeacherCourseModel TCModel)
+        public async Task<bool> CreateCoursesAsync(CreateCourseModel courseCM)
         {
-            var newCourse = _mapper.Map<Course>(TCModel);
-            var teacher = await _context.Teachers.FindAsync(TCModel.TeacherId);
-            if (newCourse == null || teacher == null) return false;
-            newCourse.Status = 1;
-            var teacherCourse = new TeacherCourse { TeacherId = TCModel.TeacherId, Course = newCourse };
-            await _context.TeacherCourses.AddAsync(teacherCourse);
+            var subj = await _context.Subjects.Where(su => su.SubName.Equals(courseCM.SubName.ToString())).FirstOrDefaultAsync();
+            var sem = await _context.Semesters.Where(s => s.SemName.Equals(courseCM.SemName.ToString())).FirstOrDefaultAsync();
+            if(subj == null || sem == null) return false;
+
+            var newCourse = new Course
+            {
+                Image = courseCM.Image,
+                CourseName = courseCM.CourseName,   
+                KeyEnroll = courseCM.KeyEnroll,
+                SubId = subj.SubId,
+                SemId = sem.SemId,
+                Status = 1
+            };
             await _context.Courses.AddAsync(newCourse);
             await _context.SaveChangesAsync();
+
+            var teacher = await _context.Teachers.FindAsync(courseCM.TeacherId);
+            var course = await _context.Courses.FindAsync(newCourse.CourseId);
+            if (teacher == null || course == null) return false;
+            var teacherCourse = new TeacherCourse { TeacherId = teacher.TeacherId, CourseId = course.CourseId };
+            await _context.TeacherCourses.AddAsync(teacherCourse);
+            await _context.SaveChangesAsync();  
+
             return true;
         }
 
-        public async Task<bool> UpdateCourseAsync(int courseId, TeacherCourseModel TCModel)
+        public async Task<bool> UpdateCourseAsync(UpdateCourseModel courseUM)
         {
-            if (courseId != TCModel.CourseId) return false;
-            var teacherCourse = await _context.TeacherCourses.Where(tc => tc.CourseId == courseId).FirstOrDefaultAsync();
-            var co = _mapper.Map<Course>(TCModel);
-            _context.Courses.Update(co);
+            var course = await _context.Courses.FindAsync(courseUM.CourseId);
+            if (course == null) return false;
+            var teacherCourse = await _context.TeacherCourses.Where(tc => tc.CourseId == courseUM.CourseId).FirstOrDefaultAsync();
+            var sub = await _context.Subjects.Where(su => su.SubName.Equals(courseUM.SubName)).FirstOrDefaultAsync();
+            var sem = await _context.Semesters.Where(se => se.SemName.Equals(courseUM.SemName)).FirstOrDefaultAsync();
+            if(sub == null || sem == null) return false;
+
+            course.CourseName = courseUM.CourseName;
+            course.Image = courseUM.Image;
+            course.KeyEnroll = courseUM.KeyEnroll;
+            course.SubId = sub.SubId;
+            course.SemId = sem.SemId;
+
+            _context.Courses.Update(course);
             await _context.SaveChangesAsync();
 
-            if (teacherCourse.TeacherId != TCModel.TeacherId)
+            if (teacherCourse.TeacherId != courseUM.TeacherId)
             {
-                //var teacherCourse = await _context.TeacherCourses
-                //    .Where(tc => tc.TeacherId == teacherId && tc.CourseId == TCModel.CourseId)
-                //    .FirstOrDefaultAsync();
                 _context.TeacherCourses.Remove(teacherCourse);
 
                 var newTeacherCourse = new TeacherCourse
                 {
-                    TeacherId = TCModel.TeacherId,
-                    CourseId = TCModel.CourseId,
+                    TeacherId = courseUM.TeacherId,
+                    CourseId = courseUM.CourseId,
                 };
                 _context.Add(newTeacherCourse);
                 await _context.SaveChangesAsync();
             }
             return true;
         }
+
         public async Task<bool> ChangeCourseStatusAsync(int courseId)
         {
             var co = await _context.Courses.Where(c => c.CourseId == courseId).FirstOrDefaultAsync();
@@ -122,21 +145,22 @@ namespace TeamManagement.Repositories.CourseReposiory
         }
 
 
-        public async Task<List<TeacherCourseModel>> GetlistCourseHaveTeacherAsync()
+        public async Task<List<GetCourseHaveTeacher>> GetlistCourseHaveTeacherAsync()
         {
             var result = await (from c in _context.Courses
                                 join tc in _context.TeacherCourses on c.CourseId equals tc.CourseId
                                 join t in _context.Teachers on tc.TeacherId equals t.TeacherId
-                                select new TeacherCourseModel
+                                join su in _context.Subjects on c.SubId equals su.SubId
+                                join se in _context.Semesters on c.SemId equals se.SemId
+                                select new GetCourseHaveTeacher
                                 {
                                     CourseId = c.CourseId,
                                     Image = c.Image,
                                     CourseName = c.CourseName,
                                     KeyEnroll = c.KeyEnroll,
-                                    TeacherId = t.TeacherId,
                                     TeacherName = t.TeacherName,
-                                    SubId = c.SubId,
-                                    SemId = c.SemId,
+                                    SubName = su.SubName,
+                                    SemName = se.SemName,
                                     Status = c.Status
                                 }).ToListAsync();
             return result;

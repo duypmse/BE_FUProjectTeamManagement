@@ -9,6 +9,8 @@ using TeamManagement.DTO;
 using TeamManagement.Repositories.CourseReposiory;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repository.Repositories.Notification;
+using TeamManagement.Repository.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.CourseModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Controllers
@@ -37,8 +39,6 @@ namespace TeamManagement.Controllers
             if (list == null) return NoContent();
             return Ok(list);
         }
-
-        
 
         [HttpGet("{courseId}/Team")]
         public async Task<IActionResult> GetListTeamByCourseId(int courseId)
@@ -79,17 +79,19 @@ namespace TeamManagement.Controllers
         //    return Ok(listCourse);
         //}
         [HttpPost]
-        public async Task<IActionResult> CreateNewCourse(TeacherCourseModel TCModel)
+        public async Task<IActionResult> CreateNewCourse(CreateCourseModel courseCM)
         {
-            var newCourse = await _courseRepository.CreateCoursesAsync(TCModel);
-            var teacher = await _teacherRepo.GetTeacherByIdAsync(TCModel.TeacherId);
+            var newCourse = await _courseRepository.CreateCoursesAsync(courseCM);
             if (!newCourse)  return BadRequest();
+
+            var teacher = await _teacherRepo.GetTeacherByIdAsync(courseCM.TeacherId);
             Dictionary<string, string> data = new Dictionary<string, string>()
             {
-                { "courseId", TCModel.CourseId.ToString() }
+                { "courseId", courseCM.CourseName.ToString() }
             };
-            await PushNotification.SendMessage(teacher.TeacherEmail, "New course" 
-                ,$"Course {TCModel.CourseName} has been added for you", data);
+            await PushNotification.SendMessage(teacher.TeacherEmail, "New course"
+                , $"Course {courseCM.CourseName} has been added for you", data);
+
             return Ok("Successfully created!");
         }
         
@@ -101,9 +103,9 @@ namespace TeamManagement.Controllers
             return Ok("Successfully change status!");
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateCourseAsync(int courseId, TeacherCourseModel TCModel)
+        public async Task<IActionResult> UpdateCourseAsync(UpdateCourseModel courseUM)
         {
-            var updateCourse = await _courseRepository.UpdateCourseAsync(courseId, TCModel);
+            var updateCourse = await _courseRepository.UpdateCourseAsync(courseUM);
             if (!updateCourse) return BadRequest();
             return Ok("Successfully updated!");
         }

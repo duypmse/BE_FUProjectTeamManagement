@@ -10,6 +10,7 @@ namespace TeamManagement.Repository.Models
         public Course()
         {
             CourseTeams = new HashSet<CourseTeam>();
+            Notifications = new HashSet<Notification>();
             Participants = new HashSet<Participant>();
             TeacherCourses = new HashSet<TeacherCourse>();
             Topics = new HashSet<Topic>();
@@ -26,6 +27,7 @@ namespace TeamManagement.Repository.Models
         public virtual Semester Sem { get; set; }
         public virtual Subject Sub { get; set; }
         public virtual ICollection<CourseTeam> CourseTeams { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Participant> Participants { get; set; }
         public virtual ICollection<TeacherCourse> TeacherCourses { get; set; }
         public virtual ICollection<Topic> Topics { get; set; }

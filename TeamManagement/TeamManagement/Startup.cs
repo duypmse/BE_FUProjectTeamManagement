@@ -33,6 +33,7 @@ using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repositories.TeamRepository;
 using TeamManagement.Repositories.TopicRepository;
 using TeamManagement.Repository.Models;
+using TeamManagement.Repository.Repositories.NotificationRepository;
 using static System.Net.WebRequestMethods;
 
 namespace TeamManagement
@@ -81,6 +82,7 @@ namespace TeamManagement
             services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
                 options.TokenValidationParameters = new TokenValidationParameters
