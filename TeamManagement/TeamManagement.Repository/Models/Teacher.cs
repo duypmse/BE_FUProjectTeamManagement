@@ -9,6 +9,7 @@ namespace TeamManagement.Repository.Models
     {
         public Teacher()
         {
+            Notifications = new HashSet<Notification>();
             TeacherCourses = new HashSet<TeacherCourse>();
             TeacherTeams = new HashSet<TeacherTeam>();
             TeacherTopics = new HashSet<TeacherTopic>();
@@ -20,6 +21,7 @@ namespace TeamManagement.Repository.Models
         public string TeacherPhone { get; set; }
         public int? Status { get; set; }
 
+        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<TeacherCourse> TeacherCourses { get; set; }
         public virtual ICollection<TeacherTeam> TeacherTeams { get; set; }
         public virtual ICollection<TeacherTopic> TeacherTopics { get; set; }

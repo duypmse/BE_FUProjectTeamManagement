@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
-using TeamManagement.Repository.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.CourseModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.CourseReposiory
@@ -12,12 +12,12 @@ namespace TeamManagement.Repositories.CourseReposiory
         Task<List<CourseDTO>> GetAllActiveCoursesAsync();
         Task<CourseDTO> GetCourseByIdAsync(int id);
         Task<CourseDTO> GetCourseByNameAsync(string courseName);
-        Task<List<TeacherCourseModel>> GetlistCourseHaveTeacherAsync();
+        Task<List<GetCourseHaveTeacher>> GetlistCourseHaveTeacherAsync();
         Task<List<TeamDTO>> GetListTeamByCourseIdAsync(int courseId);
         Task<List<StudentDTO>> GetListStudentNonTeamByCourseIdAsync(int courseId);
         //Task<List<CourseDTO>> GetCoursesNotTaughtAsync();
-        Task<bool> CreateCoursesAsync(TeacherCourseModel TCModel);
-        Task<bool> UpdateCourseAsync(int courseId, TeacherCourseModel TCModel);
+        Task<bool> CreateCoursesAsync(CreateCourseModel courseCM);
+        Task<bool> UpdateCourseAsync(UpdateCourseModel courseUM);
         Task<bool> ChangeCourseStatusAsync(int courseId);
     }
 }

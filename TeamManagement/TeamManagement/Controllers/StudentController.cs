@@ -5,7 +5,7 @@ using System.Data;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repositories.StudentRepository;
-using TeamManagement.Repository.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.CourseModel;
 
 namespace TeamManagement.Controllers
 {

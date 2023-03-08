@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.CourseModel;
 
 namespace TeamManagement.Repositories.StudentRepository
 {

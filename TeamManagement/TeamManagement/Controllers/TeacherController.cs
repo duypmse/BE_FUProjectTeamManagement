@@ -59,7 +59,14 @@ namespace TeamManagement.Controllers
                 return NoContent();
             }
             return Ok(courses);
-        }
+        } 
+
+        [HttpGet("{teacherId}/Course/{courseId}/List-NotiPost")]
+        public async Task<IActionResult> GetListNotiByTeacherAsync(int teacherId, int courseId)
+        {
+            var list = await _teacherRepository.GetListNotificationByTeacherAcync(teacherId, courseId);
+            return (list == null) ? NoContent() : Ok(list);
+        }   
 
         [HttpPost]
         public async Task<IActionResult> AddTeacher(TeacherDTO teacherDto)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
+using TeamManagement.Repository.RequestBodyModel.NotificationModel;
 //using TeamManagement.Models;
 
 namespace TeamManagement.Repositories.TeacherRepository
@@ -78,11 +79,11 @@ namespace TeamManagement.Repositories.TeacherRepository
             var teacherCourse = await _context.TeacherCourses.Where(tc => tc.TeacherId == teacherId).ToListAsync();
             if (te != null)
             {
-                if(teacherCourse != null)
+                if (teacherCourse != null)
                 {
                     _context.TeacherCourses.RemoveRange(teacherCourse);
                 }
-                if(teacherTopic != null)
+                if (teacherTopic != null)
                 {
                     _context.TeacherTopics.RemoveRange(teacherTopic);
                 }
@@ -105,19 +106,43 @@ namespace TeamManagement.Repositories.TeacherRepository
                                                           .ToListAsync();
             return _mapper.Map<List<CourseDTO>>(listCourse);
         }
-        //public async Task<bool> AddCoursesToTeacherAsync(int teacherId, List<int> courseIds)
-        //{
-        //    var teacher = await _context.Teachers.FindAsync(teacherId);
-        //    if (teacher == null) return false;
-        //    var courses = await _context.Courses.Where(c => courseIds.Contains(c.CourseId)).ToListAsync();
-        //    if (courses.Any())
-        //    {
-        //        var teacherCourses = courses.Select(c => new TeacherCourse { TeacherId = teacherId, CourseId = c.CourseId });
-        //        await _context.TeacherCourses.AddRangeAsync(teacherCourses);
-        //        await _context.SaveChangesAsync();
-        //        return true;
-        //    }
-        //    return false;
-        //}
+
+        public async Task<List<GetAnNotification>?> GetListNotificationByTeacherAcync(int teacherId, int courseId)
+        {
+            var course = await _context.Courses.Where(co => co.CourseId == courseId && co.Status == 1).FirstOrDefaultAsync();
+            var isTeacherInCourse = await _context.TeacherCourses
+                                .Where(tc => tc.TeacherId == teacherId && tc.CourseId == courseId)
+                                .FirstOrDefaultAsync();
+            if (course != null && isTeacherInCourse != null)
+            {
+                var listNoti = await (from n in _context.Notifications
+                                      where n.CourseId == courseId && n.TeacherId == teacherId
+                                      select new GetAnNotification
+                                      {
+                                          NotificationId = n.NotificationId,
+                                          Title = n.Title,
+                                          CreatedDate = n.CreatedDate,
+                                          FileNoti = n.FileNoti,
+                                          Message = n.Message,
+                                      }).ToListAsync();
+                return listNoti;
+            }
+            return null;
+        }
     }
+    //public async Task<bool> AddCoursesToTeacherAsync(int teacherId, List<int> courseIds)
+    //{
+    //    var teacher = await _context.Teachers.FindAsync(teacherId);
+    //    if (teacher == null) return false;
+    //    var courses = await _context.Courses.Where(c => courseIds.Contains(c.CourseId)).ToListAsync();
+    //    if (courses.Any())
+    //    {
+    //        var teacherCourses = courses.Select(c => new TeacherCourse { TeacherId = teacherId, CourseId = c.CourseId });
+    //        await _context.TeacherCourses.AddRangeAsync(teacherCourses);
+    //        await _context.SaveChangesAsync();
+    //        return true;
+    //    }
+    //    return false;
+    //}
+
 }
