@@ -63,6 +63,12 @@ namespace TeamManagement.Controllers
             if(list == null) return NoContent();
             return Ok(list);    
         }
+        [HttpGet("{studentId}/Course/{courseId}/Noti")]
+        public async Task<IActionResult> GetListNotiByStudent(int courseId, int studentId)
+        {
+            var list = await _student.GetListNotiByStudentAsync(courseId, studentId);
+            if(list == null) return NoContent(); return Ok(list);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateAStudent([FromBody] StudentDTO studentDTO)
         {

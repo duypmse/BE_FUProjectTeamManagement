@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
+using TeamManagement.Repository.RequestBodyModel.SubjectModel;
 //using TeamManagement.Models;
 
 namespace TeamManagement.Repositories.SubjectRepository
@@ -20,10 +21,18 @@ namespace TeamManagement.Repositories.SubjectRepository
             _mapper = mapper;
         }
 
-        public async Task<List<SubjectDTO>> GetAllSubjectAsync()
+        public async Task<List<ViewSubject>> GetAllSubjectAsync()
         {
-            var listSubject = await _context.Subjects.ToListAsync();
-            return _mapper.Map<List<SubjectDTO>>(listSubject);
+            var subjects = await (from su in _context.Subjects
+                                  join de in _context.Departments on su.DeptId equals de.DeptId
+                                  select new ViewSubject
+                                  {
+                                      SubId = su.SubId,
+                                      SubName = su.SubName,
+                                      DeptName = de.DeptName,
+                                      Status = su.Status,
+                                  }).ToListAsync();
+            return subjects;
         }
 
         public async Task<SubjectDTO> GetSubjectByIdAsync(int subjectId)
@@ -32,30 +41,35 @@ namespace TeamManagement.Repositories.SubjectRepository
             return _mapper.Map<SubjectDTO>(subject);
         }
 
-        public async Task<bool> CreateASubjectAsync(SubjectDTO subjectDTO)
+        public async Task<bool> CreateASubjectAsync(CreateSubject newSub)
         {
-            var sub = _mapper.Map<Subject>(subjectDTO);
-            var existingSubject = await _context.Subjects.Where(s => s.SubName == subjectDTO.SubName).FirstOrDefaultAsync();
-            if (sub != null && existingSubject == null)
+            var dep = await _context.Departments.Where(de => de.DeptName == newSub.DeptName.ToUpper()).FirstOrDefaultAsync();
+            var existingSub = await _context.Subjects.Where(su => su.SubName == newSub.SubName.ToUpper()).FirstOrDefaultAsync();
+            if (dep == null || existingSub != null) return false;
+            var newSubject = new Subject
             {
-                sub.Status = 1;
-                await _context.AddAsync(sub);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
+                SubName = newSub.SubName.ToUpper(),
+                DeptId = dep.DeptId,
+                Status = 1
+            };
+            _context.Subjects.Add(newSubject);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<bool> UpdateASubjectAsync(SubjectDTO subjectDTO)
+        public async Task<bool> UpdateASubjectAsync(UpdateSubject updateSub)
         {
-            if (subjectDTO != null)
-            {
-                var updateSubject = _mapper.Map<Subject>(subjectDTO);
-                _context.Update(updateSubject);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
+            var sub = await _context.Subjects.FindAsync(updateSub.SubId);
+            var dep = await _context.Departments.Where(de => de.DeptName == updateSub.DeptName.ToUpper()).FirstOrDefaultAsync();
+            var existingSub = await _context.Subjects.Where(su => su.SubName == updateSub.SubName && su.SubId != updateSub.SubId).FirstOrDefaultAsync();
+            if (sub == null || dep == null || existingSub != null) return false;
+
+            sub.SubName = updateSub.SubName.ToUpper();
+            sub.DeptId = dep.DeptId;
+
+            _context.Subjects.Update(sub);  
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeleteASubjectAsync(int subjectId)

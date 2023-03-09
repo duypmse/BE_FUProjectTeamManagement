@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.RequestBodyModel.CourseModel;
+using TeamManagement.Repository.RequestBodyModel.NotificationModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.CourseReposiory

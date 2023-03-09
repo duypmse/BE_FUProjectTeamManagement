@@ -7,6 +7,7 @@ using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
 using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.Repository.RequestBodyModel.CourseModel;
+using TeamManagement.Repository.RequestBodyModel.NotificationModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Repositories.StudentRepository
@@ -90,6 +91,19 @@ namespace TeamManagement.Repositories.StudentRepository
                                               }).ToListAsync();
             listCourseEnrolled.AddRange(listCourseUnEnrolled);
             return listCourseEnrolled;
+        }
+        public async Task<List<GetAnNotiByStudent>> GetListNotiByStudentAsync(int courseId, int studentId)
+        {
+            return await (from n in _context.Notifications
+                          join par in _context.Participants on n.CourseId equals par.CourseId
+                          where n.CourseId == courseId && par.StuId == studentId
+                          select new GetAnNotiByStudent
+                          {
+                              Title = n.Title,
+                              Message = n.Message,
+                              FileNoti = n.FileNoti,
+                              CreatedDate = n.CreatedDate,
+                          }).ToListAsync();
         }
         public async Task<bool> CreateAStudentAsync(StudentDTO studentDTO)
         {
