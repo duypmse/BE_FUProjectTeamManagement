@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
@@ -12,10 +14,12 @@ namespace TeamManagement.Controllers
     public class SemesterController : ControllerBase
     {
         private readonly ISemesterRepository _semesterRepository;
+        private readonly IDistributedCache _distributedCache;
 
-        public SemesterController(ISemesterRepository semesterRepository)
+        public SemesterController(ISemesterRepository semesterRepository, IDistributedCache distributedCache)
         {
             _semesterRepository = semesterRepository;
+            _distributedCache = distributedCache;
         }
         [HttpGet]
         public async Task<IActionResult> GetActionResultAsync()
@@ -30,7 +34,20 @@ namespace TeamManagement.Controllers
         [HttpGet("{semesterId}")]
         public async Task<IActionResult> GetSemesterByIdAsync(int semesterId)
         {
-            var semester = await _semesterRepository.GetSemesterByIdAsync(semesterId); 
+            SemesterDTO semester = null;
+            string semStr = _distributedCache.GetString("semObj_" + semesterId.ToString());
+
+            if(!string.IsNullOrEmpty(semStr))
+            {
+                semester = JsonConvert.DeserializeObject<SemesterDTO>(semStr);
+            } else
+            {
+                semester = await _semesterRepository.GetSemesterByIdAsync(semesterId);
+                if(semester!=null){
+                    await _distributedCache.SetStringAsync("semObj_" + semesterId.ToString(), JsonConvert.SerializeObject(semester));
+                }
+            }
+
             if (semester == null) return NotFound();
             return Ok(semester);
         }

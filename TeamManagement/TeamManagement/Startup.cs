@@ -99,6 +99,12 @@ namespace TeamManagement
                 option.UseSqlServer(Configuration.GetConnectionString("MyDB"));
             });
 
+            services.AddDistributedRedisCache(option =>
+            {
+                option.Configuration = Configuration["RedisConnectionString"];
+                option.InstanceName = "master";
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
