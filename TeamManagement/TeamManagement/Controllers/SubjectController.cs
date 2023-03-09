@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repositories.SubjectRepository;
+using TeamManagement.Repository.RequestBodyModel.SubjectModel;
 
 namespace TeamManagement.Controllers
 {
@@ -31,19 +32,19 @@ namespace TeamManagement.Controllers
             return Ok(sub);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateASubjectAsync(SubjectDTO subjectDTO)
+        public async Task<IActionResult> CreateASubjectAsync(CreateSubject newSub)
         {
-            var newSub = await _subjectRepository.CreateASubjectAsync(subjectDTO);
-            if(!newSub)
+            var newSubj = await _subjectRepository.CreateASubjectAsync(newSub);
+            if(!newSubj)
             {
                 return BadRequest();
             }
             return Ok("Successfully created!");
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateASubjectAsync(SubjectDTO subjectDTO)
+        public async Task<IActionResult> UpdateASubjectAsync(UpdateSubject updateSub)
         {
-            var updateSubject = await _subjectRepository.UpdateASubjectAsync(subjectDTO);
+            var updateSubject = await _subjectRepository.UpdateASubjectAsync(updateSub);
             if(!updateSubject) return BadRequest();
             return Ok("Successfully updated!");
         }

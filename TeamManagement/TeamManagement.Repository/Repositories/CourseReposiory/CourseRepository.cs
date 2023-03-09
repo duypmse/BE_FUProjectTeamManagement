@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
 using TeamManagement.Repository.RequestBodyModel.CourseModel;
+using TeamManagement.Repository.RequestBodyModel.NotificationModel;
 //using TeamManagement.Models;
 using TeamManagement.RequestBodyModel;
 
@@ -84,11 +85,12 @@ namespace TeamManagement.Repositories.CourseReposiory
         public async Task<bool> UpdateCourseAsync(UpdateCourseModel courseUM)
         {
             var course = await _context.Courses.FindAsync(courseUM.CourseId);
-            if (course == null) return false;
+            var teacher = await _context.Teachers.Where(te => te.TeacherName == courseUM.TeacherName).FirstOrDefaultAsync();
             var teacherCourse = await _context.TeacherCourses.Where(tc => tc.CourseId == courseUM.CourseId).FirstOrDefaultAsync();
             var sub = await _context.Subjects.Where(su => su.SubName.Equals(courseUM.SubName)).FirstOrDefaultAsync();
             var sem = await _context.Semesters.Where(se => se.SemName.Equals(courseUM.SemName)).FirstOrDefaultAsync();
-            if(sub == null || sem == null) return false;
+
+            if (course == null || teacher == null || teacherCourse == null || sub == null || sem == null) return false;
 
             course.CourseName = courseUM.CourseName;
             course.Image = courseUM.Image;
@@ -99,14 +101,14 @@ namespace TeamManagement.Repositories.CourseReposiory
             _context.Courses.Update(course);
             await _context.SaveChangesAsync();
 
-            if (teacherCourse.TeacherId != courseUM.TeacherId)
+            if (teacherCourse.TeacherId != teacher.TeacherId)
             {
                 _context.TeacherCourses.Remove(teacherCourse);
 
                 var newTeacherCourse = new TeacherCourse
                 {
-                    TeacherId = courseUM.TeacherId,
-                    CourseId = courseUM.CourseId,
+                    TeacherId = teacher.TeacherId,
+                    CourseId = course.CourseId,
                 };
                 _context.Add(newTeacherCourse);
                 await _context.SaveChangesAsync();
@@ -165,5 +167,6 @@ namespace TeamManagement.Repositories.CourseReposiory
                                 }).ToListAsync();
             return result;
         }
+      
     }
 }

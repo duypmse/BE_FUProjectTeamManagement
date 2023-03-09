@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.Repository.RequestBodyModel.CourseModel;
+using TeamManagement.Repository.RequestBodyModel.NotificationModel;
 
 namespace TeamManagement.Repositories.StudentRepository
 {
@@ -13,6 +14,7 @@ namespace TeamManagement.Repositories.StudentRepository
         Task<List<ActiveCourseModel>> GetAllActiveCoursesForStudentAsync(int studentId);
         Task<List<ActiveCourseModel>> GetListCourseByStudentAsync(int studentId);
         Task<List<TeamCourseModel>> GetListTeamByStudentAsync(int studentId);
+        Task<List<GetAnNotiByStudent>> GetListNotiByStudentAsync(int courseId, int studentId);
         Task<StudentDTO> StudentFindByEmailAsync(string email);
         Task<bool> StudentJoinCourseAsync(JoinCourseModel joinCourseModel);
         Task<bool> StudentOutCourseAsync(JoinCourseModel joinCourseModel);

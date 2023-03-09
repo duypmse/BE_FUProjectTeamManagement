@@ -12,7 +12,7 @@ namespace TeamManagement.Repository.RequestBodyModel.CourseModel
         public string? Image { get; set; }
         public string? CourseName { get; set; }
         public string? KeyEnroll { get; set; }
-        public int TeacherId { get; set; }
+        public string? TeacherName { get; set; }
         public string? SubName { get; set; }
         public string? SemName { get; set; }
     }
