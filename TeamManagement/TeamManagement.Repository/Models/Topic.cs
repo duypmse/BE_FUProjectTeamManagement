@@ -16,11 +16,13 @@ namespace TeamManagement.Repository.Models
         public int TopicId { get; set; }
         public string TopicName { get; set; }
         public int? CourseId { get; set; }
+        public int? SubId { get; set; }
         public DateTime? DeadlineDate { get; set; }
         public string Requirement { get; set; }
         public int? Status { get; set; }
 
         public virtual Course Course { get; set; }
+        public virtual Subject Sub { get; set; }
         public virtual ICollection<TeacherTopic> TeacherTopics { get; set; }
         public virtual ICollection<TeamTopic> TeamTopics { get; set; }
     }

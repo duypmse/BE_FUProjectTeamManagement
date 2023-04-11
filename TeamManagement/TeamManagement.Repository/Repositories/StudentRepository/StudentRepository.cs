@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
-using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.Repository.RequestBodyModel.CourseModel;
+using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.Repository.RequestBodyModel.NotificationModel;
-using TeamManagement.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.StudentModel;
 
 namespace TeamManagement.Repositories.StudentRepository
 {
@@ -19,7 +19,7 @@ namespace TeamManagement.Repositories.StudentRepository
         public StudentRepository(FUProjectTeamManagementContext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;   
+            _mapper = mapper;
         }
         public async Task<List<StudentDTO>> GetAllStudent()
         {
@@ -148,7 +148,7 @@ namespace TeamManagement.Repositories.StudentRepository
             return false;
         }
 
-        public async Task<List<ActiveCourseModel>> GetListCourseByStudentAsync(int studentId)
+        public async Task<List<ActiveCourseWithScoreModel>> GetListCourseByStudentAsync(int studentId)
         {
             //var par = await _context.Participants.Where(p => p.StuId == studentId).Select(c => c.Course).ToListAsync();
 
@@ -156,13 +156,14 @@ namespace TeamManagement.Repositories.StudentRepository
                           join c in _context.Courses on p.CourseId equals c.CourseId
                           join te in _context.TeacherCourses on p.CourseId equals te.CourseId
                           join t in _context.Teachers on te.TeacherId equals t.TeacherId
-                          where c.Status == 1
-                          select new ActiveCourseModel
+                          where c.Status == 1 && p.StuId == studentId
+                          select new ActiveCourseWithScoreModel
                           {
                               CourseId = c.CourseId,
                               Image = c.Image,
                               CourseName = c.CourseName,
                               TeacherName = t.TeacherName,
+                              Score = p.Score,
                               IsEnrolled = true
                           }).Distinct().ToListAsync();
             return await result;
@@ -208,6 +209,74 @@ namespace TeamManagement.Repositories.StudentRepository
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> AddNoteToStudentAsync(AddNote addNote)
+        {
+            var team = await _context.Teams.FindAsync(addNote.TeamId);
+            var student = await _context.Students.FindAsync(addNote.StudentId);
+            if (team == null || student == null) return false;
+            var participant = await _context.Participants.Where(p => p.TeamId == team.TeamId
+                                                                  && p.StuId == student.StuId
+                                                                  && p.CourseId != null)
+                                                         .FirstOrDefaultAsync();
+            if (participant == null) return false;
+            participant.TeacherNote = addNote.Note;
+            _context.Update(participant);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<string> GetStudentNoteAsync(int teamId, int studentId)
+        {
+            var team = await _context.Teams.FindAsync(teamId);
+            var student = await _context.Students.FindAsync(studentId);
+            if (team == null || student == null) return "";
+
+            var participant = await _context.Participants.Where(p => p.TeamId == team.TeamId
+                                                                  && p.StuId == student.StuId
+                                                                  && p.CourseId != null)
+                                                         .FirstOrDefaultAsync();
+            if (participant == null) return "";
+            if (participant.TeacherNote == null) return "This student have no any note!";
+            var note = participant.TeacherNote;
+            return note;
+        }
+
+        public async Task<bool> AddScoreToStudentAsync(AddScore addScore)
+        {
+            var team = await _context.Teams.FindAsync(addScore.TeamId);
+            var student = await _context.Students.FindAsync(addScore.StudentId);
+            if (team == null || student == null) return false;
+            var participant = await _context.Participants.Where(p => p.TeamId == team.TeamId
+                                                                  && p.StuId == student.StuId
+                                                                  && p.CourseId != null)
+                                                         .FirstOrDefaultAsync();
+            if (participant == null) return false;
+            participant.Score = addScore.Score;
+            _context.Update(participant);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<StudentDetail> GetAStudentDetailById(int teamId, int studentId)
+        {
+            return await (from stu in _context.Students
+                         join par in _context.Participants on stu.StuId equals par.StuId
+                         where stu.StuId == studentId && par.TeamId == teamId && par.CourseId != null 
+                         select new StudentDetail
+                         {
+                             StuId = stu.StuId,
+                             StuName = stu.StuName,
+                             StuCode = stu.StuCode,
+                             StuGender = stu.StuGender,
+                             StuEmail = stu.StuEmail,
+                             StuPhone = stu.StuPhone,
+                             DateOfBirth = stu.DateOfBirth,
+                             TeacherNote = par.TeacherNote,
+                             Score = par.Score,
+                             Status = par.Status
+                         }).FirstOrDefaultAsync();
         }
     }
 }

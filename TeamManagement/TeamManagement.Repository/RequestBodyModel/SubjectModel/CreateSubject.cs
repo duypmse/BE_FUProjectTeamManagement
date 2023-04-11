@@ -9,6 +9,8 @@ namespace TeamManagement.Repository.RequestBodyModel.SubjectModel
     public class CreateSubject
     {
         public string? SubName { get; set; }
+        public string? SubFullName { get; set; }
+        public string? Image { get; set; }
         public string? DeptName { get; set; }
     }
 }

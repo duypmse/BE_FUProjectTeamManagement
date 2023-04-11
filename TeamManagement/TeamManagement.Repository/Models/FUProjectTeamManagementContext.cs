@@ -151,6 +151,8 @@ namespace TeamManagement.Repository.Models
             {
                 entity.ToTable("Participant");
 
+                entity.Property(e => e.TeacherNote).HasMaxLength(4000);
+
                 entity.HasOne(d => d.Course)
                     .WithMany(p => p.Participants)
                     .HasForeignKey(d => d.CourseId)
@@ -174,10 +176,14 @@ namespace TeamManagement.Repository.Models
 
                 entity.ToTable("Semester");
 
+                entity.Property(e => e.EndDay).HasColumnType("date");
+
                 entity.Property(e => e.SemName)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.StartDay).HasColumnType("date");
             });
 
             modelBuilder.Entity<Student>(entity =>
@@ -219,6 +225,12 @@ namespace TeamManagement.Repository.Models
                     .HasName("PK__Subject__4D9BB84A19EF791F");
 
                 entity.ToTable("Subject");
+
+                entity.Property(e => e.Image)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SubFullName).HasMaxLength(100);
 
                 entity.Property(e => e.SubName)
                     .HasMaxLength(100)
@@ -351,6 +363,11 @@ namespace TeamManagement.Repository.Models
                     .WithMany(p => p.Topics)
                     .HasForeignKey(d => d.CourseId)
                     .HasConstraintName("FK__Topic__CourseId__5FB337D6");
+
+                entity.HasOne(d => d.Sub)
+                    .WithMany(p => p.Topics)
+                    .HasForeignKey(d => d.SubId)
+                    .HasConstraintName("FK_Topic_Subject");
             });
 
             OnModelCreatingPartial(modelBuilder);

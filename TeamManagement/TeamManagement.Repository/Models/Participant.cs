@@ -11,6 +11,8 @@ namespace TeamManagement.Repository.Models
         public int? TeamId { get; set; }
         public int? StuId { get; set; }
         public int? CourseId { get; set; }
+        public string TeacherNote { get; set; }
+        public int? Score { get; set; }
         public int? Status { get; set; }
 
         public virtual Course Course { get; set; }

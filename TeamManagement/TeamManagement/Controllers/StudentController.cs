@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repositories.StudentRepository;
 using TeamManagement.Repository.RequestBodyModel.CourseModel;
+using TeamManagement.Repository.RequestBodyModel.StudentModel;
 
 namespace TeamManagement.Controllers
 {
@@ -39,7 +40,13 @@ namespace TeamManagement.Controllers
             if(stu  == null) return NoContent();
             return Ok(stu);
         }
+        [HttpGet("{studentId}/Team/{teamId}/Detail")]
+        public async Task<IActionResult> GetAStudentDetailByid(int teamId, int studentId)
+        {
+            var stu = await _student.GetAStudentDetailById(teamId, studentId);
+            return stu == null ? NoContent() : Ok(stu);
 
+        }
         [Authorize(Roles = "student")]
         [HttpGet("{studentId}/Active-for-student")]
         public async Task<IActionResult> GetAllActiveCourseForStudentAsync(int studentId)
@@ -69,6 +76,13 @@ namespace TeamManagement.Controllers
             var list = await _student.GetListNotiByStudentAsync(courseId, studentId);
             if(list == null) return NoContent(); return Ok(list);
         }
+        [HttpGet("{studentId}/Team/{teamId}/Get-Note")]
+        public async Task<IActionResult> GetStudentNoteAsync(int studentId, int teamId)
+        {
+            var note = await _student.GetStudentNoteAsync(studentId, teamId);
+            if(note.Equals("")) return BadRequest();
+            return Ok(note);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateAStudent([FromBody] StudentDTO studentDTO)
         {
@@ -97,6 +111,19 @@ namespace TeamManagement.Controllers
             var outCourse = await _student.StudentOutCourseAsync(joinCourseModel);
             if (!outCourse) return BadRequest();
             return Ok("Successfully out");
+        }
+        [HttpPost("Add-Note")]
+        public async Task<IActionResult> AddNoteToStudent(AddNote addNote)
+        {
+            var add = await _student.AddNoteToStudentAsync(addNote);
+            return add ? Ok("Successfully added note") : BadRequest();
+        }
+
+        [HttpPost("Add-Score")]
+        public async Task<IActionResult> AddScoreToStudent(AddScore addScore)
+        {
+            var add = await _student.AddScoreToStudentAsync(addScore);
+            return add ? Ok("Successfully added score") : BadRequest();
         }
 
         [HttpPut("Update")]

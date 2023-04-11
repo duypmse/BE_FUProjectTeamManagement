@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
 using TeamManagement.Repository.RequestBodyModel.CourseModel;
-using TeamManagement.Repository.RequestBodyModel.NotificationModel;
+using TeamManagement.Repository.RequestBodyModel;
 //using TeamManagement.Models;
 using TeamManagement.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.StudentModel;
 
 namespace TeamManagement.Repositories.CourseReposiory
 {
@@ -140,10 +141,10 @@ namespace TeamManagement.Repositories.CourseReposiory
             return _mapper.Map<List<TeamDTO>>(listTeam);
         }
 
-        public async Task<List<StudentDTO>> GetListStudentNonTeamByCourseIdAsync(int courseId)
+        public async Task<List<StudentDetail>> GetListStudentNonTeamByCourseIdAsync(int courseId)
         {
             var listStudent = await _context.Participants.Where(c => c.CourseId == courseId && c.TeamId == null).Select(s => s.Stu).ToListAsync();
-            return _mapper.Map<List<StudentDTO>>(listStudent);
+            return _mapper.Map<List<StudentDetail>>(listStudent);
         }
 
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repositories.TeamRepository;
+using TeamManagement.Repository.RequestBodyModel.TeamTopicModel;
 using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Controllers
@@ -48,6 +49,12 @@ namespace TeamManagement.Controllers
             var topic = await _teamRepository.GetATopicByTeamIdAsync(teamId);
             if(topic == null) return NoContent();
             return Ok(topic);
+        }
+        [HttpPost("Add-Topic")]
+        public async Task<IActionResult> AddTopicToTeam(AddTopicToTeam addTT)
+        {
+            var addNew = await _teamRepository.AddTopicToTeamAsync(addTT);
+            return !addNew ? BadRequest() : Ok("Successfully added!");
         }
         [HttpPost]
         public async Task<IActionResult> CreateATeamAsync(int courseId, TeamDTO teamDto)

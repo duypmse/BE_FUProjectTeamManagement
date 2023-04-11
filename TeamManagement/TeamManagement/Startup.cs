@@ -60,7 +60,7 @@ namespace TeamManagement
                 options.AddPolicy("apiCorsPolicy", builder =>
                 {
                     builder.WithOrigins("http://localhost:5001", "https://cosmic-starship-a97dc2.netlify.app", 
-                        "http://localhost:3000", "https://loquacious-medovik-504692.netlify.app")
+                        "http://localhost:3000", "https://jade-bublanina-7fac27.netlify.app", "https://shiny-pudding-3106a4.netlify.app")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials(); 
