@@ -35,7 +35,7 @@ namespace TeamManagement.Repositories.SemesterRepository
         }
         public async Task<bool> CreateSemesterAsync(SemesterDTO semesterDto)
         {
-            var existingSemesterName = _context.Semesters.Where(s => s.SemName == semesterDto.SemName).FirstOrDefault();
+            var existingSemesterName = await _context.Semesters.Where(s => s.SemName == semesterDto.SemName).FirstOrDefaultAsync();
             if (existingSemesterName == null)
             {
                 var newSemester = _mapper.Map<Semester>(semesterDto);
@@ -49,7 +49,8 @@ namespace TeamManagement.Repositories.SemesterRepository
 
         public async Task<bool> UpdateASemesterAsync(SemesterDTO semesterDTO)
         {
-            if (semesterDTO != null)
+            //var existingSemesterName = await _context.Semesters.Where(s => s.SemName == semesterDTO.SemName).FirstOrDefaultAsync();
+            if (semesterDTO != null /*&& existingSemesterName == null*/)
             {
                 var updateSemester = _mapper.Map<Semester>(semesterDTO);
                 _context.Update(updateSemester);

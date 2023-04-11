@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
 using TeamManagement.Repository.RequestBodyModel;
-using TeamManagement.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.StudentModel;
+using TeamManagement.Repository.RequestBodyModel.TeamTopicModel;
 
 namespace TeamManagement.Repositories.TeamRepository
 {
@@ -28,20 +29,38 @@ namespace TeamManagement.Repositories.TeamRepository
             return _mapper.Map<List<TeamDTO>>(listTeam);
         }
 
-        public async Task<List<StudentDTO>> GetListStudentByTeamIdAsync(int teamId)
+        public async Task<List<StudentDetail>> GetListStudentByTeamIdAsync(int teamId)
         {
-            var listStudent = await _context.Participants.Where(t => t.TeamId == teamId).Select(s => s.Stu).ToListAsync();
-            return _mapper.Map<List<StudentDTO>>(listStudent);
+            var listStudent = await (from p in _context.Participants
+                                     join s in _context.Students on p.StuId equals s.StuId
+                                     where p.TeamId == teamId && p.CourseId != null && p.Status != 0
+                                     select new StudentDetail
+                                     {
+                                         StuId = s.StuId,
+                                         StuCode = s.StuCode,
+                                         StuName = s.StuName,
+                                         StuEmail = s.StuEmail,
+                                         StuPhone = s.StuPhone,
+                                         DateOfBirth = s.DateOfBirth,
+                                         StuGender = s.StuGender,
+                                         TeacherNote = p.TeacherNote,
+                                         Score = p.Score,
+                                         Status = p.Status,
+                                     }).ToListAsync();
+            return listStudent;
         }
         public async Task<TeamDetailModel?> GetTeamDetailByIdAsync(int teamId)
         {
             var team = await _context.Teams.FirstOrDefaultAsync(t => t.TeamId == teamId);
             if (team == null) return null;
             var teamTopic = await _context.TeamTopics.Where(tt => tt.TeamId == teamId).Select(tp => tp.Topic).FirstOrDefaultAsync();
+
             var listStudent = await _context.Participants
                                     .Where(p => p.TeamId == teamId)
                                     .Select(p => p.Stu)
                                     .ToListAsync();
+
+
             if (listStudent == null) return null;
             var teamDetail = new TeamDetailModel
             {
@@ -58,7 +77,7 @@ namespace TeamManagement.Repositories.TeamRepository
         public async Task<TopicDTO> GetATopicByTeamIdAsync(int teamId)
         {
             var topic = await _context.TeamTopics.Where(te => te.TeamId == teamId).Select(to => to.Topic).SingleOrDefaultAsync();
-            return _mapper.Map<TopicDTO>(topic);        
+            return _mapper.Map<TopicDTO>(topic);
         }
 
         public async Task<bool> AddStudentToTeamAsync(int teamId, List<int> studentIds)
@@ -173,6 +192,55 @@ namespace TeamManagement.Repositories.TeamRepository
                 _context.Update(updateTeam);
                 await _context.SaveChangesAsync();
                 return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> AddTopicToTeamAsync(AddTopicToTeam addTT)
+        {
+            var team = await _context.Teams.FindAsync(addTT.TeamId);
+            if (team != null)
+            {
+                var teamTopic = await _context.TeamTopics.AnyAsync(tt => tt.TeamId == team.TeamId);
+                if (!teamTopic)
+                {
+                    var isExistTopic = await _context.TeamTopics.Where(n => n.TopicId == addTT.TopicId).ToListAsync();
+                    foreach (var t in isExistTopic)
+                    {
+                        if (t.TopicId == addTT.TopicId) return false;
+
+                    }
+                    var newTeamTopic = new TeamTopic
+                    {
+                        TeamId = team.TeamId,
+                        TopicId = addTT.TopicId
+                    };
+                    var topic = await _context.Topics.FindAsync(addTT.TopicId);
+                    var courseId = await _context.CourseTeams.Where(ct => ct.TeamId == team.TeamId).Select(c => c.CourseId).FirstOrDefaultAsync();
+                    topic.CourseId = courseId;
+                    _context.TeamTopics.Add(newTeamTopic);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    var isExistTopic = await _context.TeamTopics.Where(n => n.TopicId == addTT.TopicId).ToListAsync();
+                    foreach (var t in isExistTopic)
+                    {
+                        if (t.TopicId == addTT.TopicId) return false;
+
+                    }
+                    var topic = await _context.TeamTopics.Where(tt => tt.TeamId == team.TeamId).FirstOrDefaultAsync();
+                    _context.TeamTopics.Remove(topic);
+                    var newTeamTopic = new TeamTopic
+                    {
+                        TeamId = team.TeamId,
+                        TopicId = addTT.TopicId
+                    };
+                    _context.TeamTopics.Add(newTeamTopic);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
             }
             return false;
         }

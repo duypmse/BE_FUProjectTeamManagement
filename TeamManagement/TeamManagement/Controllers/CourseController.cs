@@ -9,9 +9,7 @@ using TeamManagement.DTO;
 using TeamManagement.Repositories.CourseReposiory;
 using TeamManagement.Repositories.TeacherRepository;
 using TeamManagement.Repository.Repositories.Notification;
-using TeamManagement.Repository.RequestBodyModel;
 using TeamManagement.Repository.RequestBodyModel.CourseModel;
-using TeamManagement.RequestBodyModel;
 
 namespace TeamManagement.Controllers
 {

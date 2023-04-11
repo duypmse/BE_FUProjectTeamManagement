@@ -2,8 +2,7 @@
 using System.Runtime.Intrinsics.Arm;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
-using TeamManagement.Repository.RequestBodyModel;
-using TeamManagement.RequestBodyModel;
+using TeamManagement.Repository.RequestBodyModel.StudentModel;
 
 namespace TeamManagement.Helper
 {
@@ -20,6 +19,7 @@ namespace TeamManagement.Helper
             CreateMap<Topic, TopicDTO>().ReverseMap();
             CreateMap<Subject, SubjectDTO>().ReverseMap();
             CreateMap<Department, DepartmentDTO>().ReverseMap();
+            CreateMap<Student, StudentDetail>().ReverseMap();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
 using TeamManagement.Repository.RequestBodyModel.NotificationModel;
-//using TeamManagement.Models;
+using TeamManagement.Repository.RequestBodyModel.SubjectModel;
 
 namespace TeamManagement.Repositories.TeacherRepository
 {
@@ -128,6 +128,27 @@ namespace TeamManagement.Repositories.TeacherRepository
                 return listNoti;
             }
             return null;
+        }
+
+        public async Task<List<GetSubject>> GetListSubjectByTeacherIdAsync(int teacherId)
+        {
+            var listSub = await (from su in _context.Subjects
+                                 join de in _context.Departments on su.DeptId equals de.DeptId
+                                 join c in _context.Courses on su.SubId equals c.SubId
+                                 join tc in _context.TeacherCourses on c.CourseId equals tc.CourseId
+                                 join te in _context.Teachers on tc.TeacherId equals te.TeacherId
+                                 where te.TeacherId == teacherId && c.Status == 1
+                                 select new GetSubject
+                                 {
+                                     SubId = su.SubId,
+                                     SubName = su.SubName,
+                                     SubFullName = su.SubFullName,
+                                     Image = su.Image,
+                                     DeptName = de.DeptName,
+                                     Status = su.Status,
+                                 }).Distinct().ToListAsync();
+            return listSub;
+
         }
     }
     //public async Task<bool> AddCoursesToTeacherAsync(int teacherId, List<int> courseIds)

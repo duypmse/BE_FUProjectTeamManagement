@@ -13,7 +13,7 @@ namespace TeamManagement.Repository.Models
         public string Title { get; set; }
         public string FileNoti { get; set; }
         public string Message { get; set; }
-        public DateTime? CreatedDate { get; set; } 
+        public DateTime? CreatedDate { get; set; }
         public int? Status { get; set; }
 
         public virtual Course Course { get; set; }

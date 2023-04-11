@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamManagement.DTO;
 using TeamManagement.Repository.Models;
+using TeamManagement.Repository.RequestBodyModel.CourseModel;
 using TeamManagement.Repository.RequestBodyModel.SubjectModel;
+using TeamManagement.Repository.RequestBodyModel.TopicModel;
 //using TeamManagement.Models;
 
 namespace TeamManagement.Repositories.SubjectRepository
@@ -29,6 +32,8 @@ namespace TeamManagement.Repositories.SubjectRepository
                                   {
                                       SubId = su.SubId,
                                       SubName = su.SubName,
+                                      SubFullName = su.SubFullName,
+                                      Image = su.Image,
                                       DeptName = de.DeptName,
                                       Status = su.Status,
                                   }).ToListAsync();
@@ -49,6 +54,8 @@ namespace TeamManagement.Repositories.SubjectRepository
             var newSubject = new Subject
             {
                 SubName = newSub.SubName.ToUpper(),
+                SubFullName = newSub.SubFullName,
+                Image = newSub.Image,
                 DeptId = dep.DeptId,
                 Status = 1
             };
@@ -65,9 +72,11 @@ namespace TeamManagement.Repositories.SubjectRepository
             if (sub == null || dep == null || existingSub != null) return false;
 
             sub.SubName = updateSub.SubName.ToUpper();
+            sub.SubFullName = updateSub.SubFullName;
+            sub.Image = updateSub.Image;
             sub.DeptId = dep.DeptId;
 
-            _context.Subjects.Update(sub);  
+            _context.Subjects.Update(sub);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -91,6 +100,53 @@ namespace TeamManagement.Repositories.SubjectRepository
                 return true;
             }
             return false;
+        }
+
+        public Task<List<CourseDTO>> GetListCourseBySubId(int teacherId, int subId)
+        {
+            var list = (from su in _context.Subjects
+                        join co in _context.Courses on su.SubId equals co.SubId
+                        join tc in _context.TeacherCourses on co.CourseId equals tc.CourseId
+                        join te in _context.Teachers on tc.TeacherId equals te.TeacherId
+                        where su.SubId == subId && co.Status == 1 && te.TeacherId == teacherId
+                        select new CourseDTO
+                        {
+                            CourseId = co.CourseId,
+                            Image = co.Image,
+                            CourseName = co.CourseName,
+                            KeyEnroll = co.KeyEnroll,
+                            SubId = co.SubId,
+                            SemId = co.SemId,
+                            Status = co.Status
+                        }).ToListAsync();
+            return list;
+        }
+
+        public async Task<List<ViewTopic>> GetListTopicBySubIdAsync(int subId)
+        {
+            var list = await (from su in _context.Subjects
+                              join to in _context.Topics on su.SubId equals to.SubId
+                              where su.SubId == subId
+                              select new ViewTopic
+                              {
+                                  TopicId = to.TopicId,
+                                  TopicName = to.TopicName,
+                              }).ToListAsync();
+            return list;
+        }
+
+        public async Task<List<ViewTopic>> GetListTopicNonTeamInACourse(int subId)
+        {
+            return await (from su in _context.Subjects
+                          join co in _context.Courses on su.SubId equals co.SubId
+                          join to in _context.Topics on su.SubId equals to.SubId
+                          where su.SubId == subId && co.Status == 1 && to.CourseId == null &&
+                                !_context.TeamTopics.Any(tt => tt.TopicId == to.TopicId)
+                          select new ViewTopic
+                          {
+                              TopicId = to.TopicId,
+                              TopicName = to.TopicName,
+                          }).Distinct().ToListAsync();
         }
     }
 }
